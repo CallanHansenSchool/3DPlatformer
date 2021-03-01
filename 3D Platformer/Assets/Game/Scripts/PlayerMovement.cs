@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     #region Constants
 
-    private const float GROUND_CHECK_DISTANCE = 0.1f;
+    private const float GROUND_CHECK_RADIUS = 0.11f;
     private const KeyCode JUMP_KEY = KeyCode.Space;
 
     #endregion
@@ -34,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 jumpDirection;
     private float turnSmoothVelocity = 0;
+
+    public LayerMask GroundLayer;
 
     void Awake()
     {
@@ -79,18 +81,6 @@ public class PlayerMovement : MonoBehaviour
 
     bool Grounded() // Is the player on the ground?
     {
-        RaycastHit hit;
-
-        Vector3 dir = new Vector3(0f, -GROUND_CHECK_DISTANCE, 0f);
-
-        if (Physics.Raycast(groundChecker.position, dir, out hit, GROUND_CHECK_DISTANCE)) // Raycast goes down a short distance from the groundcheckers position to check for the ground
-        {
-            if(hit.transform.CompareTag("Ground"))
-            {
-                return true; //The player is on the ground
-            }   
-        }
-
-        return false; // The player is not grounded
+        return Physics.CheckSphere(groundChecker.transform.position, GROUND_CHECK_RADIUS, GroundLayer); // Create a small invisible sphere under the player and check if its overlapping with the ground
     }
 }
