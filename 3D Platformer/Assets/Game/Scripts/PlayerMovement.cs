@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Transform groundChecker; // The position from which the ground is checked from
     [SerializeField] private GameObject playerModel;
+    [SerializeField] private LayerMask groundLayer;
 
     private CharacterController controller = null;
 
@@ -34,8 +35,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 jumpDirection;
     private float turnSmoothVelocity = 0;
-
-    public LayerMask GroundLayer;
 
     void Awake()
     {
@@ -81,6 +80,6 @@ public class PlayerMovement : MonoBehaviour
 
     bool Grounded() // Is the player on the ground?
     {
-        return Physics.CheckSphere(groundChecker.transform.position, GROUND_CHECK_RADIUS, GroundLayer); // Create a small invisible sphere under the player and check if its overlapping with the ground
+        return Physics.CheckSphere(groundChecker.transform.position, GROUND_CHECK_RADIUS, groundLayer); // Create a small invisible sphere under the player and check if its overlapping with the ground
     }
 }
