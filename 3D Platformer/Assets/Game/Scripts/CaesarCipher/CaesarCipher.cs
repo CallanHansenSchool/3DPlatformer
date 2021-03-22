@@ -5,6 +5,7 @@ public class CaesarCipher : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI EncryptedSentence;
     [SerializeField] private TextMeshProUGUI DecryptedSentence;
+    [SerializeField] private TextMeshProUGUI EncryptionAmount;
 
     public char Cipher(char _ch, int _encryptionAmount) // Return the enciphered character
     {
@@ -37,6 +38,7 @@ public class CaesarCipher : MonoBehaviour
         string cipherText = Encipher(GameManager.Instance.WantedWord, GameManager.Instance.EncryptionAmount);
         EncryptedSentence.text = cipherText;
         GameManager.Instance.EncryptedSentence = cipherText;
+        EncryptionAmount.text = (GameManager.Instance.EncryptionAmount * -1).ToString();
 
         //string decipheredSentence = Decipher(cipherText, GameManager.Instance.EncryptionAmount);
         DecryptedSentence.text = GameManager.Instance.CurrentSentence;

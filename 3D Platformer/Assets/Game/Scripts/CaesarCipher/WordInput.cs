@@ -27,6 +27,7 @@ public class WordInput : MonoBehaviour
         if (string.Equals(wordInputField.text, GameManager.Instance.WantedWord, StringComparison.OrdinalIgnoreCase)) // Checking if the players input is the same as the correct word, ignoring caps
         {
             wordStatusText.text = CORRECT_TEXT;
+            SceneManagement.Instance.LoadScene(GameManager.SCENE_LEVEL_SELECTION);
         } else
         {
             wordStatusText.text = WRONG_TEXT;

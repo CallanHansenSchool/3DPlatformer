@@ -163,6 +163,7 @@ MonoBehaviour:
   jumpVelocity: 10
   gravityScale: 1.3
   rotateSmoothTime: 0.1
+  jumpHeightCut: 0.7
   groundChecker: {fileID: 6438081757611648702}
   playerModel: {fileID: 6438081758088796583}
   groundLayer:
@@ -175,7 +176,7 @@ CharacterController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6438081758726530554}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 64ffb2f780d0ddc40b89751ee7437f87, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2

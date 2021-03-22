@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class HUD : MonoBehaviour // Update and handle the HUD
 {
@@ -13,6 +14,9 @@ public class HUD : MonoBehaviour // Update and handle the HUD
 
     public TextMeshProUGUI LettersCollectedText;
     public TextMeshProUGUI AllLettersCollectedText;
+    public TextMeshProUGUI LivesRemainingText;
+
+    public Slider HealthBarSlider;
 
     public static HUD Instance;
 
@@ -30,12 +34,15 @@ public class HUD : MonoBehaviour // Update and handle the HUD
     void Start()
     {
         AllLettersCollectedText.text = "";
+        UpdateHUD();
     }
-
 
     public void UpdateHUD()
     {
         LettersCollectedText.text = LETTERS_COLLECTED + GameManager.Instance.CurrentSentence;
+        LivesRemainingText.text = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3).ToString();
+
+        HealthBarSlider.value = PlayerHealth.Instance.CurrentHealth;
 
         if (GameManager.Instance.LettersCollected.Count == GameManager.Instance.WantedWord.Length) // All letters are collected
         {

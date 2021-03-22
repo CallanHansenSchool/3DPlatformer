@@ -13,6 +13,10 @@ public class GameManager : MonoBehaviour
     public const string PLAYER_TAG = "Player";
     #endregion
 
+    #region SceneNames
+    public const string SCENE_LEVEL_SELECTION = "LevelSelection";
+    #endregion
+
     public string WantedWord = "Example"; // Inputted word at the start of game
     public string EncryptedSentence = "";
     public string CurrentSentence = ""; // The current word spelt which needs to be sorted into the correct order, so that the sentence doesnt get jumbled up if the letters are collected in the wrong order
@@ -27,9 +31,6 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         if (Instance == null)
         {
             Instance = this;
@@ -39,12 +40,23 @@ public class GameManager : MonoBehaviour
             Debug.LogError("There are 2 instances of the GameManager!");
             Destroy(gameObject);
         }
+
+        //DebugResetPlayerPrefs();
     }
 
     void Start()
     {
         //SpawnCollectables();
         CheckLetterCount();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Time.timeScale = 1;
+    }
+
+    void DebugResetPlayerPrefs() // For resetting all playerprefs
+    {
+        PlayerPrefs.DeleteAll();
     }
 
     public void CheckLetterCount() // Ensuring that there are not too many letters in the level
