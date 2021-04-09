@@ -1,22 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
     public float CurrentHealth = 0f;
-    public float StartingHealth = 4.0f;
+    [SerializeField] private float startingHealth = 4.0f;
+
+    [SerializeField] private Slider healthBar = null;
+
+    private bool dead = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        CurrentHealth = StartingHealth;
+        CurrentHealth = startingHealth;
+
+        healthBar.maxValue = startingHealth;
+
+        healthBar.value = CurrentHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateUI()
     {
-        if(CurrentHealth <= 0)
+        healthBar.value = CurrentHealth;
+    }
+
+    public void TakeDamage(float damageToTake)
+    {
+        CurrentHealth -= damageToTake;
+        UpdateUI();
+
+        if (CurrentHealth <= 0)
         {
             Die();
         }
@@ -24,6 +40,10 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        GetComponent<Animator>().SetTrigger(EnemyAnimatorConstants.DIE);
+        if(!dead)
+        {
+            dead = true;
+            GetComponentInChildren<Animator>().SetTrigger(EnemyAnimatorConstants.DIE);
+        }       
     }
 }

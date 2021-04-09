@@ -23,7 +23,7 @@ public class EnemyPatrol : StateMachineBehaviour // Manages what the enemy does 
         {
             animator.SetTrigger(EnemyAnimatorConstants.IDLE);
             // Debug.Log("Reached wanted location!");
-        }    
+        }
     }
 
     void GotoNextPoint()

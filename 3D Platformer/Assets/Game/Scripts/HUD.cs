@@ -12,11 +12,16 @@ public class HUD : MonoBehaviour // Update and handle the HUD
     private const string LETTERS_COLLECTED = "Letters Collected: ";
     #endregion
 
+    public Slider HealthBarSlider;
+
+    #region TextMesh
+    [Header("Texts")]
     public TextMeshProUGUI LettersCollectedText;
     public TextMeshProUGUI AllLettersCollectedText;
     public TextMeshProUGUI LivesRemainingText;
-
-    public Slider HealthBarSlider;
+    public TextMeshProUGUI CommonCollectableText;
+    public TextMeshProUGUI RareCollectableText;
+    #endregion 
 
     public static HUD Instance;
 
@@ -31,6 +36,7 @@ public class HUD : MonoBehaviour // Update and handle the HUD
             Destroy(gameObject);
         }
     }
+
     void Start()
     {
         AllLettersCollectedText.text = "";
@@ -39,6 +45,9 @@ public class HUD : MonoBehaviour // Update and handle the HUD
 
     public void UpdateHUD()
     {
+        CommonCollectableText.text = CollectableManager.Instance.CommonCollectablesCollected.ToString();
+        RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString();
+
         LettersCollectedText.text = LETTERS_COLLECTED + GameManager.Instance.CurrentSentence;
         LivesRemainingText.text = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3).ToString();
 
