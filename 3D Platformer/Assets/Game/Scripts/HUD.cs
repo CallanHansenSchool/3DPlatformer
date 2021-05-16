@@ -16,11 +16,11 @@ public class HUD : MonoBehaviour // Update and handle the HUD
 
     #region TextMesh
     [Header("Texts")]
-    public TextMeshProUGUI LettersCollectedText;
-    public TextMeshProUGUI AllLettersCollectedText;
-    public TextMeshProUGUI LivesRemainingText;
-    public TextMeshProUGUI CommonCollectableText;
-    public TextMeshProUGUI RareCollectableText;
+    public TextMeshProUGUI LettersCollectedText = null;
+    public TextMeshProUGUI AllLettersCollectedText = null;
+    public TextMeshProUGUI LivesRemainingText = null;
+    public TextMeshProUGUI CommonCollectableText = null;
+    public TextMeshProUGUI RareCollectableText = null;
     #endregion 
 
     public static HUD Instance;
@@ -46,7 +46,7 @@ public class HUD : MonoBehaviour // Update and handle the HUD
     public void UpdateHUD()
     {
         CommonCollectableText.text = CollectableManager.Instance.CommonCollectablesCollected.ToString();
-        RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString();
+        RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString() + " / " + (GameManager.Instance.RareCollectables.Length).ToString();
 
         LettersCollectedText.text = LETTERS_COLLECTED + GameManager.Instance.CurrentSentence;
         LivesRemainingText.text = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3).ToString();

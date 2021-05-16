@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour
     public Animator Anim = null;
 
     public PlayerMovement PlayerMovement;
+    public PlayerSlopeSlide PlayerSlopeSlide;
 
     void Awake()
     {
@@ -37,16 +38,26 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         PlayerMovement = GetComponent<PlayerMovement>();
+        PlayerSlopeSlide = GetComponent<PlayerSlopeSlide>();
         startPos = transform.position;
         gameOverCanvas.SetActive(false);
         livesRemaining = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3);
     }
 
-    public IEnumerator BeginDeath()
+    public IEnumerator BeginDeath(string deathType = "") // Handles the death of the player
     {
         if (!Dead)
         {
-            Anim.SetTrigger(PlayerAnimationConstants.DIE);
+            if(deathType == "")
+            {
+                Anim.SetTrigger(PlayerAnimationConstants.DIE);
+            } else if (deathType == "Enemy")
+            {
+                Anim.SetTrigger(PlayerAnimationConstants.DIE);
+            } else if(deathType == "Drown")
+            {
+                Anim.SetTrigger(PlayerAnimationConstants.DROWN);
+            }         
 
             PlayerMovement.enabled = false;
 
@@ -88,5 +99,13 @@ public class PlayerManager : MonoBehaviour
         Anim.SetTrigger(PlayerAnimationConstants.FINISH_DEATH);
         Instance.transform.position = startPos;
         Physics.SyncTransforms(); // Update the changed position
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag(GameManager.WATER_TAG))
+        {          
+            StartCoroutine(BeginDeath("Drown"));
+        }
     }
 }

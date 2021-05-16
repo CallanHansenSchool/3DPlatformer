@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5219978296398665112}
   - component: {fileID: 5219978296398665113}
   - component: {fileID: 5219978296398665114}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LetterCollectable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,3 +110,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CollectableType: 3
   Letter: 76
+  moveTowardPlayerDistance: 0.3
+  moveTowardPlayerSpeed: 1.2

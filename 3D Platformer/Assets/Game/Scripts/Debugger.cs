@@ -12,6 +12,7 @@ public class Debugger : MonoBehaviour // For debugging
     public Canvas DebuggerCanvas = null;
     public TextMeshProUGUI SlopeDebug = null;
     public TextMeshProUGUI ClimbDebug = null;
+    public TextMeshProUGUI SlopeAngleDebug = null;
 
     private Vector3 groundCheckPosition = Vector3.zero;
     private float groundCheckRadius = 0;
@@ -19,8 +20,6 @@ public class Debugger : MonoBehaviour // For debugging
     private float slopeRaycastAmount;
 
     public bool Climbing = false;
-
-    private PlayerMovement playerMovement;
 
     void Awake()
     {
@@ -37,7 +36,6 @@ public class Debugger : MonoBehaviour // For debugging
 
     void Start()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
         DebuggerCanvas.gameObject.SetActive(Debug);
     }
 
@@ -63,6 +61,14 @@ public class Debugger : MonoBehaviour // For debugging
         }     
     }
 
+    public void UpdateSlopeAngleText(float _angleAmount)
+    {
+        if(Debug)
+        {
+            SlopeAngleDebug.text = _angleAmount.ToString() + "°";
+        }
+    }
+
     public void ShowGroundChecker(Vector3 _position, float _radius)
     {
         if(Debug)
@@ -81,7 +87,7 @@ public class Debugger : MonoBehaviour // For debugging
     {
         Gizmos.DrawSphere(groundCheckPosition, groundCheckRadius);
 
-        if(playerMovement.OnSlope())
+        if(PlayerManager.Instance.PlayerMovement.OnSlope())
         {
             Vector3 direction = transform.TransformDirection(Vector3.down) * slopeRaycastAmount;
             Gizmos.DrawRay(groundCheckPosition, direction);

@@ -5,12 +5,13 @@ public class PlayerMovement : MonoBehaviour
 {
     #region Constants
 
-    private const float GROUND_CHECK_RADIUS_GROUND = 0.1f;
+    private const float GROUND_CHECK_RADIUS_GROUND = 0.09f;
     private const float JUMP_PRESSED_REMEMBER_TIME = 0.2f;
     private const float GROUNDED_REMEMBER_TIME = 0.2f;
     private const float FALLING_TIME_BEFORE_NO_DOUBLE_JUMP = 5f;
 
     public const KeyCode JUMP_KEY = KeyCode.Space;
+    public const KeyCode CONTROLLER_JUMP_KEY = KeyCode.JoystickButton1;
 
     #endregion
 
@@ -21,9 +22,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float defaultMovementSpeed = 10; // How fast the player moves 
     [SerializeField] private float movementSpeed = 0; // How fast the player moves 
     [SerializeField] private float jumpVelocity = 3.5f; // How high the player jumps
-    [SerializeField] private float gravityScale = 9.81f; // How fast the player falls 
+ 
     [SerializeField] private float rotateSmoothTime = 0.1f; // How slowly the player takes to rotate in the correct direction
     [SerializeField] private float jumpHeightCut = 0.5f; // For more responsive jumping when jumping off a platform and the player doesn't press the jump button while still technically grounded
+
+    #endregion
+
+    #region Gravity
+
+    [Header("Gravity")]
+
+    private float gravityScale = 9.81f; // How fast the player falls
+    [SerializeField] private float defaultGravityScale = 2f; // How fast the player falls by default
+    [SerializeField] private float slopeGravityScale = 12f; // How fast the player gets pulled down when on a slope
 
     #endregion
 
@@ -32,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Slopes")]
 
     [SerializeField] private float slopeCheckRaycastAmount = 0.5f;
+    
 
     [Header("Slope Check Amounts")]
     [SerializeField] private float smallSlopeCheckAmount = 0.15f; 
@@ -47,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float slopeRaycastAmount = 0.7f; 
 
-    private float groundCheckRadius;
+    private float groundCheckRadius = 0.1f;
 
     #endregion
 
@@ -76,6 +88,13 @@ public class PlayerMovement : MonoBehaviour
     private bool OnEdgeGrounded = false;
     public bool TouchingOverallGround = false;
 
+    [SerializeField] private float amountBeforeFall = -0.5f;
+
+    public bool CanControlPlayer = true;
+
+    private float horizontalInput;
+    private float verticalInput;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -90,11 +109,27 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Getting user input WASD or arrow keys
-        float _horizontalInput = Input.GetAxis("Horizontal");
-        float _verticalInput = Input.GetAxis("Vertical");
+        if(!GameManager.Instance.UsingController)
+        {
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
+        } else
+        {
+            horizontalInput = Input.GetAxis("Horizontal");
+            verticalInput = Input.GetAxis("Vertical");
+        }
+        
+        PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.HORIZONTAL_INPUT, Mathf.Abs(horizontalInput));
+        PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.VERTICAL_INPUT, Mathf.Abs(verticalInput));
 
-        PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.HORIZONTAL_INPUT, Mathf.Abs(_horizontalInput));
-        PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.VERTICAL_INPUT, Mathf.Abs(_verticalInput));
+        if (OnSlope() &&  (horizontalInput > 0 || verticalInput > 0)) // Player is moving on a slope
+        {
+            gravityScale = slopeGravityScale; // For keeping the player planted on the slope
+        }
+        else if(Grounded())
+        {
+            gravityScale = defaultGravityScale;
+        } 
 
         if (Grounded())
         {
@@ -121,7 +156,7 @@ public class PlayerMovement : MonoBehaviour
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.GROUNDED, false);
         }
 
-        moveDirection = new Vector3(_horizontalInput, 0, _verticalInput);
+        moveDirection = new Vector3(horizontalInput, 0, verticalInput);
 
         moveDirection.Normalize(); // Normalized to stop faster diagonal speeds
 
@@ -134,7 +169,11 @@ public class PlayerMovement : MonoBehaviour
             Vector3 _moveDir = Quaternion.Euler(0f, _targetAngle, 0f) * Vector3.forward;
             _moveDir.Normalize();
 
-            controller.Move(_moveDir * movementSpeed * Time.deltaTime); // Applying the values to move the player
+            if(CanControlPlayer)
+            {
+                controller.Move(_moveDir * movementSpeed * Time.deltaTime); // Applying the values to move the player
+            }
+            
         }
 
         jumpPressedRemember -= Time.deltaTime;
@@ -145,11 +184,21 @@ public class PlayerMovement : MonoBehaviour
             groundedRemember = GROUNDED_REMEMBER_TIME;
             jumpDirection.y = 0;
             CanDoubleJump = false;
+        } else
+        {
+            if(jumpDirection.y < amountBeforeFall)
+            {
+                PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.FALLING, true);
+            } else
+            {
+                PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.FALLING, false);
+            }
         }
 
-        if (Input.GetKeyDown(JUMP_KEY))
+        if (Input.GetKeyDown(JUMP_KEY) || Input.GetKeyDown(CONTROLLER_JUMP_KEY))
         {
             jumpPressedRemember = JUMP_PRESSED_REMEMBER_TIME;
+            gravityScale = defaultGravityScale;
 
             if (CanDoubleJump)
             {
@@ -175,7 +224,7 @@ public class PlayerMovement : MonoBehaviour
             CanDoubleJump = false;
         }
 
-        if (Input.GetKeyUp(JUMP_KEY))
+        if (Input.GetKeyUp(JUMP_KEY) || Input.GetKeyUp(CONTROLLER_JUMP_KEY))
         {
             if (jumpDirection.y > 0)
             {
@@ -184,7 +233,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         jumpDirection.y = jumpDirection.y + (Physics.gravity.y * gravityScale * Time.deltaTime);
-        controller.Move(jumpDirection * Time.deltaTime);
+
+        if (CanControlPlayer)
+        {
+            controller.Move(jumpDirection * Time.deltaTime);
+        }
+      
 
         if (controller.velocity.y == 0 && !Grounded() && !OnSlope()) // Checks if the player is on the very edge of a platform
         {
@@ -214,41 +268,48 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Debug.Log(hit.normal.y);
 
-                if (hit.normal.y <= smallSlopeAngle && hit.normal.y > mediumSlopeAngle)
+                if (hit.normal.y <= smallSlopeAngle && hit.normal.y > mediumSlopeAngle) // On a small slope
                 {
                     slopeRaycastAmount = smallSlopeCheckAmount;
                     //Debug.Log("On small slope");
                     Debugger.Instance.UpdateSlopeDebugText("Small slope");
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
                 }
-                else if (hit.normal.y <= mediumSlopeAngle && hit.normal.y > largeSlopeAngle)
+                else if (hit.normal.y <= mediumSlopeAngle && hit.normal.y > largeSlopeAngle) // On a  medium slope
                 {
                     slopeRaycastAmount = mediumSlopeCheckAmount;
                     //Debug.Log("On medium slope");
                     Debugger.Instance.UpdateSlopeDebugText("Medium slope");
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
                 }
-                else if (hit.normal.y <= largeSlopeAngle && hit.normal.y > steepSlopeAngle)
+                else if (hit.normal.y <= largeSlopeAngle && hit.normal.y > steepSlopeAngle) // On a large slope
                 {
                     slopeRaycastAmount = largeSlopeCheckAmount;
                     //Debug.Log("On large slope");
                     Debugger.Instance.UpdateSlopeDebugText("Large slope");
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
                 }
-                else if (hit.normal.y < steepSlopeAngle)
+                else if (hit.normal.y < steepSlopeAngle) // On a steep slope
                 {
                     slopeRaycastAmount = steepSlopeCheckAmount;
                     //Debug.Log("On steep slope");
                     Debugger.Instance.UpdateSlopeDebugText("Steep slope");
-                }
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = true;
+                } 
             } else
             {
                 Debugger.Instance.UpdateSlopeDebugText("No slope");
+                PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
             } 
-        }      
+        }
+
+        Debugger.Instance.UpdateSlopeAngleText(Vector3.Angle(Vector3.up, hit.normal));
 
         if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, slopeRaycastAmount, groundLayer))
         {
             if (hit.normal != Vector3.up)
             {
-                Debugger.Instance.SetSlopeRaycast(slopeRaycastAmount);
+                Debugger.Instance.SetSlopeRaycast(slopeRaycastAmount);          
                 return true;
             }
         }

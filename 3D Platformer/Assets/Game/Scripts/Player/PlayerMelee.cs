@@ -6,10 +6,10 @@ public class PlayerMelee : MonoBehaviour
 {
     private const KeyCode AttackKey = KeyCode.Mouse0;
 
-    private float attackSpeed;
+    private float attackSpeed = 1.5f;
 
     [SerializeField] private float startAttackSpeed = 0.1f;
-    [SerializeField] private GameObject meleeAttackBox;
+    [SerializeField] private GameObject meleeAttackBox = null;
     public float AttackDamage = 2f;
 
     private bool attacking = false;

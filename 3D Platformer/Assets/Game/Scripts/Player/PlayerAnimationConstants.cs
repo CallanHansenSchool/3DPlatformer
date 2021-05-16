@@ -8,6 +8,7 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     // Movement
     public const string GROUNDED = "Grounded";
     public const string JUMP = "Jump";
+    
 
     // Climbing
     public const string CLIMBING = "Climbing";
@@ -16,6 +17,7 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     // Death
     public const string DIE = "Die";
     public const string FINISH_DEATH = "FinishDeath";
+    public const string DROWN = "Drown";
 
     // Attack Animations
     public const string ATTACK1 = "Attack1";
@@ -26,6 +28,7 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string SHOOT = "Shoot";
 
     // Polish Animations
+    public const string FALLING = "Falling";
     public const string DOUBLE_JUMP = "DoubleJump";
     public const string FACE_PLANT = "FinishFaceplant";
     public const string TEETER = "Teeter";  

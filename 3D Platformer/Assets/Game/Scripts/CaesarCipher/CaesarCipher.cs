@@ -38,7 +38,7 @@ public class CaesarCipher : MonoBehaviour
         string cipherText = Encipher(GameManager.Instance.WantedWord, GameManager.Instance.EncryptionAmount);
         EncryptedSentence.text = cipherText;
         GameManager.Instance.EncryptedSentence = cipherText;
-        EncryptionAmount.text = (GameManager.Instance.EncryptionAmount * -1).ToString();
+        EncryptionAmount.text = GameManager.Instance.EncryptionAmount.ToString();
 
         //string decipheredSentence = Decipher(cipherText, GameManager.Instance.EncryptionAmount);
         DecryptedSentence.text = GameManager.Instance.CurrentSentence;

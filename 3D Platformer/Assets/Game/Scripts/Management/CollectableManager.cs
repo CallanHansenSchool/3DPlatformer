@@ -28,7 +28,7 @@ public class CollectableManager : MonoBehaviour // For managing the collectable 
         { 
             PlayerPrefs.SetInt(PlayerPrefConstants.PLAYER_LIVES, PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES) + 1); // Add a life
             HUD.Instance.UpdateHUD();
-            CommonCollectablesCollected -= 100;
+            CommonCollectablesCollected -= COMMON_COLLECTABLES_NEEDED_FOR_LIFE;
         }
     }
 }

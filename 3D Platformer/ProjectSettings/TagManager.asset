@@ -9,6 +9,8 @@ TagManager:
   - Projectile
   - Climbable
   - LadderEnd
+  - Ledge
+  - Water
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - UI
   - Player
   - Projectile
-  - 
+  - Collectable
   - 
   - 
   - 

@@ -6,7 +6,20 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenu = null;
 
-    private bool paused = false;
+    public bool Paused = false;
+
+    public static PauseMenu Instance;
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        } else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -23,11 +36,10 @@ public class PauseMenu : MonoBehaviour
 
     public void PauseGame()
     {
-        paused = !paused;
+        Paused = !Paused;
 
-        if (paused)
+        if (Paused)
         {
-            CameraZoom.Instance.CanZoom = false;
             Time.timeScale = 0;
             pauseMenu.gameObject.SetActive(true);
             Cursor.lockState = CursorLockMode.None;
@@ -35,7 +47,6 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
-            CameraZoom.Instance.CanZoom = true;
             Time.timeScale = 1;
             pauseMenu.gameObject.SetActive(false);
             Cursor.lockState = CursorLockMode.Locked;

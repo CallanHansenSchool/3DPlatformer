@@ -2,10 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
-    public Camera MainCamera;
+    public Camera MainCamera = null;
+
+    [Header("Virtual Cameras")]
+    public CinemachineFreeLook MainVirtualCamera = null;
+    public CinemachineFreeLook aimingCamera = null;   
 
     public static GameManager Instance;
 
@@ -13,10 +18,11 @@ public class GameManager : MonoBehaviour
     public const string PLAYER_TAG = "Player";
     public const string ENEMY_TAG = "Enemy";
     public const string CLIMBABLE_TAG = "Climbable";
+    public const string WATER_TAG = "Water";
     #endregion
 
     #region SceneNames
-    public const string SCENE_LEVEL_SELECTION = "LevelSelection";
+    public const string MAIN_MENU = "MainMenu";
     #endregion
 
     public string WantedWord = "Example"; // Inputted word at the start of game
@@ -26,10 +32,13 @@ public class GameManager : MonoBehaviour
 
     public int EncryptionAmount = 2; // Change depending on game difficulty
     public int NumOfLettersCollected = 0;
-    
+
+    public GameObject[] RareCollectables = null;
     public List<GameObject> letterCollectableLocations = new List<GameObject>();
 
-    [SerializeField] private GameObject letterCollectablePrefab;
+    [SerializeField] private GameObject letterCollectablePrefab = null;
+
+    public bool UsingController = false; 
 
     void Awake()
     {

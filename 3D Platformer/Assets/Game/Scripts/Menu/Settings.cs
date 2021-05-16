@@ -8,25 +8,11 @@ using System.Linq;
 
 public class Settings : MonoBehaviour
 {
-    #region Constants
-    public const string VSYNC_SETTING = "VSyncSetting";
-    public const string FULLSCREEN_SETTING = "FullScreenSetting";
-    public const string MOTION_BLUR_SETTING = "MotionBlurSetting";
-    public const string FILM_GRAIN_SETTING = "FilmGrainSetting";
-
-    public const string MUSIC_VOLUME_SETTING = "MusicVolumeSetting";
-    public const string VOICE_VOLUME_SETTING = "VoiceVolumeSetting";
-
-    //public const string RESOLUTION_SETTING = "ResolutionSetting";
-    public const string QUALITY_SETTING = "QualitySetting";
-    #endregion
-
     #region References
     [Header("Toggles")]
     [SerializeField] private Toggle vSyncToggle;
     [SerializeField] private Toggle fullscreenToggle;
-    [SerializeField] private Toggle motionBlurToggle;
-    [SerializeField] private Toggle filmGrainToggle;
+    [SerializeField] private Toggle postProcessingToggle;
 
     [Header("Sliders")]
     [SerializeField] private Slider musicVolumeSlider;
@@ -71,18 +57,17 @@ public class Settings : MonoBehaviour
 
         #region Setting Settings Values
 
-        vSyncToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(VSYNC_SETTING));
-        fullscreenToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(FULLSCREEN_SETTING));
-        motionBlurToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(MOTION_BLUR_SETTING));
-        filmGrainToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(FILM_GRAIN_SETTING));
+        vSyncToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.VSYNC_SETTING));
+        fullscreenToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.FULLSCREEN_SETTING, 1));
+        postProcessingToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.POST_PROCESSING_SETTING, 1));
 
-        musicVolumeSlider.value = PlayerPrefs.GetFloat(MUSIC_VOLUME_SETTING);
-        voiceVolumeSlider.value = PlayerPrefs.GetFloat(VOICE_VOLUME_SETTING);
+        musicVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.MUSIC_VOLUME_SETTING);
+        voiceVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.VOICE_VOLUME_SETTING);
 
         resolutionDropdown.value = _currentResolutionIndex;
 
 
-        qualityDropdown.value = PlayerPrefs.GetInt(QUALITY_SETTING);
+        qualityDropdown.value = PlayerPrefs.GetInt(PlayerPrefConstants.QUALITY_SETTING, 2);
 
         #endregion
 
@@ -92,38 +77,30 @@ public class Settings : MonoBehaviour
     public void SetVSync(bool setVsync) // Set whether vSync should be enabled or disabled
     {
         QualitySettings.vSyncCount = Convert.ToInt16(setVsync); // Set vSync to whatever the setting is currently at
-        PlayerPrefs.SetInt(VSYNC_SETTING, Convert.ToInt16(setVsync));
+        PlayerPrefs.SetInt(PlayerPrefConstants.VSYNC_SETTING, Convert.ToInt16(setVsync));       
     }
 
     public void SetFullScreen(bool _isFullscreen) // Set whether the game should be fullscreen or not
     {
         Screen.fullScreen = _isFullscreen;
-        PlayerPrefs.SetInt(FULLSCREEN_SETTING, Convert.ToInt16(_isFullscreen));
+        PlayerPrefs.SetInt(PlayerPrefConstants.FULLSCREEN_SETTING, Convert.ToInt16(_isFullscreen));
     }
 
-    public void SetMotionBlur(bool _setMotionBlur) // Set whether motion blur should be enabled or disabled
+    public void SetPostProcessing(bool _setPostProcessing) // Set whether post processing should be enabled or disabled
     {
-        // Enable/disable motion blur
-        PlayerPrefs.SetInt(MOTION_BLUR_SETTING, Convert.ToInt16(_setMotionBlur));
-
-        // Debug.Log(Convert.ToInt16(setMotionBlur).ToString());
-    }
-
-    public void SetFilmGrain(bool _setFilmGrain) // Set whether motion blur should be enabled or disabled
-    {
-        // Enable/disable film grain
-        PlayerPrefs.SetInt(FILM_GRAIN_SETTING, Convert.ToInt16(_setFilmGrain));
+        PlayerPrefs.SetInt(PlayerPrefConstants.POST_PROCESSING_SETTING, Convert.ToInt16(_setPostProcessing));
+        SettingsApply.Instance.ApplySettings();
     }
 
     public void SetMusicVolue(float _value) // Set the volume of the music
     {
         // Set the music volume to the _value setting
-        PlayerPrefs.SetFloat(MUSIC_VOLUME_SETTING, _value);
+        PlayerPrefs.SetFloat(PlayerPrefConstants.MUSIC_VOLUME_SETTING, _value);
     }
     public void SetVoiceVolume(float _value) // Set the volume of the music
     {
         // Set the voice volume to the _value setting
-        PlayerPrefs.SetFloat(VOICE_VOLUME_SETTING, _value);
+        PlayerPrefs.SetFloat(PlayerPrefConstants.VOICE_VOLUME_SETTING, _value);
     }
 
     public void SetResolution(int _resolutionIndex) // Set the resolution that the game runs at
@@ -136,6 +113,6 @@ public class Settings : MonoBehaviour
     public void SetQuality(int _qualityIndex) // Set the quality of the game
     {
         QualitySettings.SetQualityLevel(_qualityIndex);
-        PlayerPrefs.SetInt(QUALITY_SETTING, _qualityIndex);
+        PlayerPrefs.SetInt(PlayerPrefConstants.QUALITY_SETTING, _qualityIndex);
     }
 }

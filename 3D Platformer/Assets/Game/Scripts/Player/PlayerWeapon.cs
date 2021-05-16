@@ -14,11 +14,7 @@ public class PlayerWeapon : MonoBehaviour
     [SerializeField] private Transform projectileSpawnPosition = null;
     [SerializeField] private float projectileSpeed = 4;
 
-    [Header("Virtual Cameras")]
-    [SerializeField] private CinemachineFreeLook mainCamera = null;
-    [SerializeField] private CinemachineFreeLook aimingCamera = null;
-
-    [SerializeField] private GameObject crosshair;
+    [SerializeField] private GameObject crosshair = null;
     public static PlayerWeapon Instance;
 
     [SerializeField] private float rayGetPoint = 250;
@@ -45,26 +41,29 @@ public class PlayerWeapon : MonoBehaviour
     {     
         if (PlayerManager.Instance.PlayerMovement.TouchingOverallGround)
         {
-            if (Input.GetKeyDown(AIM_BUTTON))
+            if(!PauseMenu.Instance.Paused)
             {
-                Aiming = true;
-                CheckAim();
-            }
-
-            if (Input.GetKeyUp(AIM_BUTTON))
-            {
-                Aiming = false;
-                CheckAim();
-            }
-
-            if (Input.GetKeyDown(SHOOT_BUTTON))
-            {
-                if (Aiming)
+                if (Input.GetKeyDown(AIM_BUTTON))
                 {
-                    ShootSpikes();
+                    Aiming = true;
                     CheckAim();
                 }
-            }
+
+                if (Input.GetKeyUp(AIM_BUTTON))
+                {
+                    Aiming = false;
+                    CheckAim();
+                }
+
+                if (Input.GetKeyDown(SHOOT_BUTTON))
+                {
+                    if (Aiming)
+                    {
+                        ShootSpikes();
+                        CheckAim();
+                    }
+                }
+            }          
         }
 
         if(Aiming)
@@ -80,18 +79,17 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (Aiming)
         {
-            PlayerManager.Instance.PlayerMovement.enabled = false;
-            
+            PlayerManager.Instance.PlayerMovement.enabled = false;        
             crosshair.SetActive(true);
-            aimingCamera.Priority = 1;
-            mainCamera.Priority = 0;
+            GameManager.Instance.aimingCamera.Priority = 1;
+            GameManager.Instance.MainVirtualCamera.Priority = 0;
         }
         else
         {
             PlayerManager.Instance.PlayerMovement.enabled = true;
             crosshair.SetActive(false);
-            aimingCamera.Priority = 0;
-            mainCamera.Priority = 1;
+            GameManager.Instance.aimingCamera.Priority = 0;
+            GameManager.Instance.MainVirtualCamera.Priority = 1;
         }
     }
 

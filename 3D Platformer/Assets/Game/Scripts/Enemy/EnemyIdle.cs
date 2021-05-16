@@ -12,7 +12,8 @@ public class EnemyIdle : StateMachineBehaviour // Manages what the enemy does wh
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         enemyManager = animator.GetComponentInParent<EnemyManager>();
-        timeToWait = enemyManager.IdleWaitTime;      
+        timeToWait = enemyManager.IdleWaitTime;
+        enemyManager.Agent.speed = 0;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -20,14 +21,13 @@ public class EnemyIdle : StateMachineBehaviour // Manages what the enemy does wh
     {
         enemyManager.CheckIfChase();
 
-        if (timeToWait < 0)
+        if (timeToWait <= 0)
         {
             animator.SetTrigger(EnemyAnimatorConstants.PATROL);
         }
         else
         {
             timeToWait -= Time.deltaTime;
-            enemyManager.Agent.speed = 0;
         }
     }
 }
