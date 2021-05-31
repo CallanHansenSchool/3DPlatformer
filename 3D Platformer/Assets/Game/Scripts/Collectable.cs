@@ -47,6 +47,8 @@ public class Collectable : MonoBehaviour
                 case COLLECTABLE_TYPE.LETTER:
                     //Play letter collectable pickup effect
                     // Play letter collectable sound
+                    gameObject.SetActive(false);
+                    HUD.Instance.UpdateLetterCount();
                     GameManager.Instance.NumOfLettersCollected++;
                     GameManager.Instance.LettersCollected.Add(Letter);
                     GameManager.Instance.UpdateLettersUI();

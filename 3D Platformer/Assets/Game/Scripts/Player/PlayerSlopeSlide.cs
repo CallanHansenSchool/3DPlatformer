@@ -22,6 +22,7 @@ public class PlayerSlopeSlide : MonoBehaviour
                 Destroy(rb);
                 GetComponent<CharacterController>().enabled = true;
                 GetComponent<CapsuleCollider>().enabled = false;
+                PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.SLIDING, false);
                 addedRB = false;
             }
         }
@@ -31,11 +32,13 @@ public class PlayerSlopeSlide : MonoBehaviour
     {
         if (!addedRB)
         {
+            PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.SLIDING, true);
             rb = gameObject.AddComponent<Rigidbody>();
             addedRB = true;
 
             GetComponent<CharacterController>().enabled = false;
             PlayerManager.Instance.PlayerMovement.CanControlPlayer = false;
+          
             GetComponent<CapsuleCollider>().enabled = true;
         }
         else

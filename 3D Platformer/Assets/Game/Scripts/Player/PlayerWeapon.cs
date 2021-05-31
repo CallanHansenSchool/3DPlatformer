@@ -111,7 +111,7 @@ public class PlayerWeapon : MonoBehaviour
             targetPoint = ray.GetPoint(rayGetPoint); 
         }
         
-        GameObject projectile = Instantiate<GameObject>(projectilePrefab, projectileSpawnPosition.position, projectileSpawnPosition.rotation); // Spawn in the projectile
+        GameObject projectile = Instantiate<GameObject>(projectilePrefab, projectileSpawnPosition.position, Quaternion.Euler(projectileSpawnPosition.rotation.x - 60, projectileSpawnPosition.rotation.y, projectileSpawnPosition.rotation.z)); // Spawn in the projectile
         projectile.GetComponent<Rigidbody>().velocity = (targetPoint - projectileSpawnPosition.transform.position).normalized * projectileSpeed; // Shoot the projectile in the correct direction
 
         PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.SHOOT);

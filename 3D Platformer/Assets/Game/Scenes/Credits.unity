@@ -262,7 +262,8 @@ MonoBehaviour:
     \n\n- 3DTextures.me\n\nAnimation: Mixamo\n\nMusic: (NAME)\n\nSound FX: (NAME)\n\nAssets
     Used:\n\n- Customized Skybox by Key Mouse\n- Low Poly Tree Pack by Broken Vector\n-
     URP Stylized Water Shader - Proto Series by BitGem\n- Simple Stylized Grass Shader
-    by Quinten H\n\nThank you for playing!\n\nA game by NightZard Productions"
+    by Quinten H\n- Cartoon style wood texture created by 0melapics - www.freepik.com\n\nThank
+    you for playing!\n\nA game by NightZard Productions"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

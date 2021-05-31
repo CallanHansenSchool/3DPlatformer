@@ -42,12 +42,6 @@ public class PlayerLadderClimbing : MonoBehaviour
 
             Vector3 _movementVector = new Vector3(0, verticalInput * climbSpeed, 0);
 
-            if (Input.GetKeyDown(PlayerMovement.JUMP_KEY))
-            {
-                PlayerManager.Instance.PlayerMovement.enabled = true;
-                canClimb = false;            
-            }
-
             controller.Move(_movementVector * Time.deltaTime);
 
             if (PlayerManager.Instance.PlayerMovement.Grounded())

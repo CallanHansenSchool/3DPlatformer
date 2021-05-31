@@ -5,7 +5,7 @@ public class CollectableManager : MonoBehaviour // For managing the collectable 
     public int CommonCollectablesCollected = 0;
     public int RareCollectablesCollected = 0;
 
-    private const int COMMON_COLLECTABLES_NEEDED_FOR_LIFE = 100;
+    public const int COMMON_COLLECTABLES_NEEDED_FOR_LIFE = 100;
 
     public static CollectableManager Instance;
 

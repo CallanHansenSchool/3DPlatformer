@@ -109,27 +109,28 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Getting user input WASD or arrow keys
-        if(!GameManager.Instance.UsingController)
+        if (!GameManager.Instance.UsingController)
         {
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
-        } else
+        }
+        else
         {
             horizontalInput = Input.GetAxis("Horizontal");
             verticalInput = Input.GetAxis("Vertical");
         }
-        
+
         PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.HORIZONTAL_INPUT, Mathf.Abs(horizontalInput));
         PlayerManager.Instance.Anim.SetFloat(PlayerAnimationConstants.VERTICAL_INPUT, Mathf.Abs(verticalInput));
 
-        if (OnSlope() &&  (horizontalInput > 0 || verticalInput > 0)) // Player is moving on a slope
+        if (OnSlope() && (horizontalInput > 0 || verticalInput > 0)) // Player is moving on a slope
         {
             gravityScale = slopeGravityScale; // For keeping the player planted on the slope
         }
-        else if(Grounded())
+        else if (Grounded())
         {
             gravityScale = defaultGravityScale;
-        } 
+        }
 
         if (Grounded())
         {
@@ -144,14 +145,15 @@ public class PlayerMovement : MonoBehaviour
             TouchingOverallGround = true;
         }
         else
-        {           
+        {
             TouchingOverallGround = false;
         }
 
-        if(TouchingOverallGround)
+        if (TouchingOverallGround)
         {
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.GROUNDED, true);
-        } else
+        }
+        else
         {
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.GROUNDED, false);
         }
@@ -169,11 +171,11 @@ public class PlayerMovement : MonoBehaviour
             Vector3 _moveDir = Quaternion.Euler(0f, _targetAngle, 0f) * Vector3.forward;
             _moveDir.Normalize();
 
-            if(CanControlPlayer)
+            if (CanControlPlayer)
             {
                 controller.Move(_moveDir * movementSpeed * Time.deltaTime); // Applying the values to move the player
             }
-            
+
         }
 
         jumpPressedRemember -= Time.deltaTime;
@@ -184,12 +186,14 @@ public class PlayerMovement : MonoBehaviour
             groundedRemember = GROUNDED_REMEMBER_TIME;
             jumpDirection.y = 0;
             CanDoubleJump = false;
-        } else
+        }
+        else
         {
-            if(jumpDirection.y < amountBeforeFall)
+            if (jumpDirection.y < amountBeforeFall)
             {
                 PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.FALLING, true);
-            } else
+            }
+            else
             {
                 PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.FALLING, false);
             }
@@ -238,7 +242,7 @@ public class PlayerMovement : MonoBehaviour
         {
             controller.Move(jumpDirection * Time.deltaTime);
         }
-      
+
 
         if (controller.velocity.y == 0 && !Grounded() && !OnSlope()) // Checks if the player is on the very edge of a platform
         {
@@ -250,12 +254,33 @@ public class PlayerMovement : MonoBehaviour
         }
 
         PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.TEETER, OnEdgeGrounded);
+
+        CheckSteepSlope();
     }
 
     void Jump()
     {
         jumpDirection.y = jumpVelocity;
         PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.JUMP);
+    }
+
+    void CheckSteepSlope()
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, steepSlopeCheckAmount, groundLayer))
+        {
+            if (hit.normal != Vector3.up)
+            {
+                if (hit.normal.y < steepSlopeAngle) // On a steep slope
+                {
+                    slopeRaycastAmount = steepSlopeCheckAmount;
+                    //Debug.Log("On steep slope");
+                    Debugger.Instance.UpdateSlopeDebugText("Steep slope");
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = true;
+                }
+            }
+        }
     }
 
     public bool OnSlope() // Detects if the player is on a slope
@@ -299,6 +324,7 @@ public class PlayerMovement : MonoBehaviour
             } else
             {
                 Debugger.Instance.UpdateSlopeDebugText("No slope");
+                slopeCheckRaycastAmount = smallSlopeCheckAmount;
                 PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
             } 
         }
