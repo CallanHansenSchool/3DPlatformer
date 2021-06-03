@@ -43,21 +43,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Slopes")]
 
     [SerializeField] private float slopeCheckRaycastAmount = 0.5f;
-    
-
-    [Header("Slope Check Amounts")]
-    [SerializeField] private float smallSlopeCheckAmount = 0.15f; 
-    [SerializeField] private float mediumSlopeCheckAmount = 0.15f; 
-    [SerializeField] private float largeSlopeCheckAmount = 0.2f; 
-    [SerializeField] private float steepSlopeCheckAmount = 0.27f;
-
-    [Header("Slope Angle Amounts")]
-    [SerializeField] private float smallSlopeAngle = 0.85f;
-    [SerializeField] private float mediumSlopeAngle = 0.8f;
-    [SerializeField] private float largeSlopeAngle = 0.75f;
+    [SerializeField] private float steepSlopeRaycastCheckAmount = 0.27f;
     [SerializeField] private float steepSlopeAngle = 0.7f;
-
-    private float slopeRaycastAmount = 0.7f; 
 
     private float groundCheckRadius = 0.1f;
 
@@ -95,6 +82,10 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
 
+    private bool checkGround = true;
+    private const float TIME_UNTIL_NEXT_CHECK = 1f;
+    private float timeUntilNextCheck;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -103,7 +94,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         groundCheckRadius = GROUND_CHECK_RADIUS_GROUND;
-        slopeRaycastAmount = smallSlopeCheckAmount;
     }
 
     void Update()
@@ -134,15 +124,24 @@ public class PlayerMovement : MonoBehaviour
 
         if (Grounded())
         {
-            TouchingOverallGround = true;
+            if (checkGround)
+            {
+                TouchingOverallGround = true;
+            }
         }
         else if (OnSlope())
         {
-            TouchingOverallGround = true;
+            if(checkGround)
+            {
+                TouchingOverallGround = true;
+            }       
         }
         else if (OnEdgeGrounded)
         {
-            TouchingOverallGround = true;
+            if(checkGround)
+            {
+                TouchingOverallGround = true;
+            }         
         }
         else
         {
@@ -243,7 +242,6 @@ public class PlayerMovement : MonoBehaviour
             controller.Move(jumpDirection * Time.deltaTime);
         }
 
-
         if (controller.velocity.y == 0 && !Grounded() && !OnSlope()) // Checks if the player is on the very edge of a platform
         {
             OnEdgeGrounded = true;
@@ -256,28 +254,37 @@ public class PlayerMovement : MonoBehaviour
         PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.TEETER, OnEdgeGrounded);
 
         CheckSteepSlope();
+
+        if (!checkGround)
+        {      
+            timeUntilNextCheck -= Time.deltaTime;
+
+            if(timeUntilNextCheck < 0)
+            {
+                checkGround = true;
+            }
+        }
     }
 
     void Jump()
     {
+        checkGround = false;
+        timeUntilNextCheck = TIME_UNTIL_NEXT_CHECK;
         jumpDirection.y = jumpVelocity;
-        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.JUMP);
+        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.JUMP);    
     }
 
     void CheckSteepSlope()
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, steepSlopeCheckAmount, groundLayer))
+        if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, steepSlopeRaycastCheckAmount, groundLayer))
         {
             if (hit.normal != Vector3.up)
             {
                 if (hit.normal.y < steepSlopeAngle) // On a steep slope
                 {
-                    slopeRaycastAmount = steepSlopeCheckAmount;
-                    //Debug.Log("On steep slope");
-                    Debugger.Instance.UpdateSlopeDebugText("Steep slope");
-                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = true;
+                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = true;   
                 }
             }
         }
@@ -287,59 +294,22 @@ public class PlayerMovement : MonoBehaviour
     {
         RaycastHit hit;
 
-        if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, slopeCheckRaycastAmount, groundLayer))
+        if (checkGround)
         {
-            if (hit.normal != Vector3.up)
-            {
-                // Debug.Log(hit.normal.y);
-
-                if (hit.normal.y <= smallSlopeAngle && hit.normal.y > mediumSlopeAngle) // On a small slope
-                {
-                    slopeRaycastAmount = smallSlopeCheckAmount;
-                    //Debug.Log("On small slope");
-                    Debugger.Instance.UpdateSlopeDebugText("Small slope");
-                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
+            if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, slopeCheckRaycastAmount, groundLayer))
+            {          
+                if (hit.normal != Vector3.up)
+                {           
+                    return true;
                 }
-                else if (hit.normal.y <= mediumSlopeAngle && hit.normal.y > largeSlopeAngle) // On a  medium slope
+                else
                 {
-                    slopeRaycastAmount = mediumSlopeCheckAmount;
-                    //Debug.Log("On medium slope");
-                    Debugger.Instance.UpdateSlopeDebugText("Medium slope");
+                    Debugger.Instance.UpdateSlopeDebugText("No slope");
                     PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
-                }
-                else if (hit.normal.y <= largeSlopeAngle && hit.normal.y > steepSlopeAngle) // On a large slope
-                {
-                    slopeRaycastAmount = largeSlopeCheckAmount;
-                    //Debug.Log("On large slope");
-                    Debugger.Instance.UpdateSlopeDebugText("Large slope");
-                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
-                }
-                else if (hit.normal.y < steepSlopeAngle) // On a steep slope
-                {
-                    slopeRaycastAmount = steepSlopeCheckAmount;
-                    //Debug.Log("On steep slope");
-                    Debugger.Instance.UpdateSlopeDebugText("Steep slope");
-                    PlayerManager.Instance.PlayerSlopeSlide.Sliding = true;
-                } 
-            } else
-            {
-                Debugger.Instance.UpdateSlopeDebugText("No slope");
-                slopeCheckRaycastAmount = smallSlopeCheckAmount;
-                PlayerManager.Instance.PlayerSlopeSlide.Sliding = false;
-            } 
-        }
-
-        Debugger.Instance.UpdateSlopeAngleText(Vector3.Angle(Vector3.up, hit.normal));
-
-        if (Physics.Raycast(groundChecker.transform.position, Vector3.down, out hit, slopeRaycastAmount, groundLayer))
-        {
-            if (hit.normal != Vector3.up)
-            {
-                Debugger.Instance.SetSlopeRaycast(slopeRaycastAmount);          
-                return true;
+                    return false;
+                }            
             }
         }
-
         return false;
     }
 

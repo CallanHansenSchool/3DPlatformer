@@ -12,7 +12,7 @@ public class Debugger : MonoBehaviour // For debugging
     public Canvas DebuggerCanvas = null;
     public TextMeshProUGUI SlopeDebug = null;
     public TextMeshProUGUI ClimbDebug = null;
-    public TextMeshProUGUI SlopeAngleDebug = null;
+    // public TextMeshProUGUI SlopeAngleDebug = null;
 
     private Vector3 groundCheckPosition = Vector3.zero;
     private float groundCheckRadius = 0;
@@ -61,6 +61,7 @@ public class Debugger : MonoBehaviour // For debugging
         }     
     }
 
+    /*
     public void UpdateSlopeAngleText(float _angleAmount)
     {
         if(Debug)
@@ -68,6 +69,7 @@ public class Debugger : MonoBehaviour // For debugging
             SlopeAngleDebug.text = _angleAmount.ToString() + "°";
         }
     }
+    */
 
     public void ShowGroundChecker(Vector3 _position, float _radius)
     {

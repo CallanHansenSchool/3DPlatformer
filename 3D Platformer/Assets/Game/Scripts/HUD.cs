@@ -72,8 +72,7 @@ public class HUD : MonoBehaviour // Update and handle the HUD
         CommonCollectableText.text = CollectableManager.Instance.CommonCollectablesCollected.ToString() + " / " + CollectableManager.COMMON_COLLECTABLES_NEEDED_FOR_LIFE.ToString();
         RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString() + " / " + (GameManager.Instance.RareCollectables.Length).ToString();
   
-       
-
+      
         LettersCollectedText.text = LETTERS_COLLECTED + GameManager.Instance.CurrentSentence;
         LivesRemainingText.text = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3).ToString();
 

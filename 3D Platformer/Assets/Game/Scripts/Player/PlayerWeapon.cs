@@ -43,27 +43,30 @@ public class PlayerWeapon : MonoBehaviour
         {
             if(!PauseMenu.Instance.Paused)
             {
-                if (Input.GetKeyDown(AIM_BUTTON))
+                if(!DialogueManager.Instance.InDialogue)
                 {
-                    Aiming = true;
-                    CheckAim();
-                }
-
-                if (Input.GetKeyUp(AIM_BUTTON))
-                {
-                    Aiming = false;
-                    CheckAim();
-                }
-
-                if (Input.GetKeyDown(SHOOT_BUTTON))
-                {
-                    if (Aiming)
+                    if (Input.GetKeyDown(AIM_BUTTON))
                     {
-                        ShootSpikes();
+                        Aiming = true;
                         CheckAim();
                     }
-                }
-            }          
+
+                    if (Input.GetKeyUp(AIM_BUTTON))
+                    {
+                        Aiming = false;
+                        CheckAim();
+                    }
+
+                    if (Input.GetKeyDown(SHOOT_BUTTON))
+                    {
+                        if (Aiming)
+                        {
+                            ShootSpikes();
+                            CheckAim();
+                        }
+                    }
+                }           
+            }
         }
 
         if(Aiming)

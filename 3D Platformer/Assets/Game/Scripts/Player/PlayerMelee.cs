@@ -15,17 +15,23 @@ public class PlayerMelee : MonoBehaviour
     private bool attacking = false;
 
     void Update()
-    {
+    {      
         if (Input.GetKeyDown(AttackKey))
         {
-            if(!PlayerWeapon.Instance.Aiming)
+            if (!PauseMenu.Instance.Paused)
             {
-                if(!attacking)
+                if (!DialogueManager.Instance.InDialogue)
                 {
-                    PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.ATTACK1);
-                    attackSpeed = startAttackSpeed;
-                }           
-            }    
+                    if (!PlayerWeapon.Instance.Aiming)
+                    {
+                        if (!attacking)
+                        {
+                            PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.ATTACK1);
+                            attackSpeed = startAttackSpeed;
+                        }
+                    }
+                }
+            }              
         }
 
         if (attackSpeed > 0)

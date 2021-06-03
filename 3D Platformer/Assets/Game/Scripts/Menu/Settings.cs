@@ -13,6 +13,7 @@ public class Settings : MonoBehaviour
     [SerializeField] private Toggle vSyncToggle;
     [SerializeField] private Toggle fullscreenToggle;
     [SerializeField] private Toggle postProcessingToggle;
+    [SerializeField] private Toggle grassEnabledToggle;
 
     [Header("Sliders")]
     [SerializeField] private Slider musicVolumeSlider;
@@ -22,6 +23,8 @@ public class Settings : MonoBehaviour
     [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private TMP_Dropdown qualityDropdown;
     #endregion
+
+    [SerializeField] private Terrain levelTerrain;
 
     private Resolution[] resolutions;
 
@@ -40,7 +43,6 @@ public class Settings : MonoBehaviour
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-
             string option = resolutions[i].width + " x " + resolutions[i].height + " @" + resolutions[i].refreshRate + "Hz";
 
             options.Add(option);
@@ -60,24 +62,30 @@ public class Settings : MonoBehaviour
         vSyncToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.VSYNC_SETTING));
         fullscreenToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.FULLSCREEN_SETTING, 1));
         postProcessingToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.POST_PROCESSING_SETTING, 1));
+        grassEnabledToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.GRASS_SETTING, 1));
 
         musicVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.MUSIC_VOLUME_SETTING);
         voiceVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.VOICE_VOLUME_SETTING);
 
         resolutionDropdown.value = _currentResolutionIndex;
 
-
         qualityDropdown.value = PlayerPrefs.GetInt(PlayerPrefConstants.QUALITY_SETTING, 2);
-
+      
         #endregion
 
         resolutionDropdown.RefreshShownValue();
     }
 
-    public void SetVSync(bool setVsync) // Set whether vSync should be enabled or disabled
+    public void SetGrass(bool _setGrass)
     {
-        QualitySettings.vSyncCount = Convert.ToInt16(setVsync); // Set vSync to whatever the setting is currently at
-        PlayerPrefs.SetInt(PlayerPrefConstants.VSYNC_SETTING, Convert.ToInt16(setVsync));       
+        PlayerPrefs.SetInt(PlayerPrefConstants.GRASS_SETTING, Convert.ToInt16(_setGrass));
+        levelTerrain.drawTreesAndFoliage = _setGrass;
+    }
+
+    public void SetVSync(bool _setVsync) // Set whether vSync should be enabled or disabled
+    {
+        QualitySettings.vSyncCount = Convert.ToInt16(_setVsync); // Set vSync to whatever the setting is currently at
+        PlayerPrefs.SetInt(PlayerPrefConstants.VSYNC_SETTING, Convert.ToInt16(_setVsync));       
     }
 
     public void SetFullScreen(bool _isFullscreen) // Set whether the game should be fullscreen or not

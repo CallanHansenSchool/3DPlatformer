@@ -11,6 +11,8 @@ public class PlayerPrefConstants
     public const string MUSIC_VOLUME_SETTING = "MusicVolumeSetting";
     public const string VOICE_VOLUME_SETTING = "VoiceVolumeSetting";
 
+    public const string GRASS_SETTING = "GrassEnabledSetting";
+
     public const string QUALITY_SETTING = "QualitySetting";
     #endregion
 }

@@ -20,6 +20,8 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Button option2Button = null;
     [SerializeField] private Button option3Button = null;
 
+    public bool InDialogue = false;
+
     #region Singleton
     public static DialogueManager Instance;
 
@@ -57,6 +59,8 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string _startSentence)
     {
+        InDialogue = true;
+
         sentenceCount = Sender.Option1Sentences.Length - 1;
 
         GameManager.Instance.MainVirtualCamera.enabled = false;
@@ -109,6 +113,7 @@ public class DialogueManager : MonoBehaviour
         Cursor.visible = false;
         GameManager.Instance.MainVirtualCamera.enabled = true;
         GameManager.Instance.aimingCamera.enabled = true;
+        InDialogue = false;
         dialogueBox.SetActive(false);
     }
 
