@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour // Manages the players health
 {
     public float CurrentHealth = 0;
-    [SerializeField] private float maxHealth = 6.0f;
+    public float MaxHealth = 6.0f;
 
     public static PlayerHealth Instance;
 
@@ -23,7 +23,7 @@ public class PlayerHealth : MonoBehaviour // Manages the players health
     // Start is called before the first frame update
     void Start()
     {
-        HUD.Instance.HealthBarSlider.maxValue = maxHealth;    
+        HUD.Instance.HealthBarSlider.maxValue = MaxHealth;    
         HUD.Instance.HealthBarSlider.minValue = 0;
 
         ResetHealth();
@@ -31,7 +31,7 @@ public class PlayerHealth : MonoBehaviour // Manages the players health
 
     public void ResetHealth()
     {
-        CurrentHealth = maxHealth;
+        CurrentHealth = MaxHealth;
         HUD.Instance.UpdateHUD();
     }
 

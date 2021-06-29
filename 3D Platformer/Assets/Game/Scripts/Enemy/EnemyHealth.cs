@@ -11,14 +11,16 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Slider healthBar = null;
 
     private bool dead = false;
+    private EnemyKnockback enemyknockback = null;
 
     // Start is called before the first frame update
     void Start()
     {
+        enemyknockback = GetComponent<EnemyKnockback>();
+
         CurrentHealth = startingHealth;
 
         healthBar.maxValue = startingHealth;
-
         healthBar.value = CurrentHealth;
     }
 
@@ -32,9 +34,15 @@ public class EnemyHealth : MonoBehaviour
         CurrentHealth -= damageToTake;
         UpdateUI();
 
+        enemyknockback.hitNumber++;
+
         if (CurrentHealth <= 0)
         {
             Die();
+        } else
+        {
+            GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.TAKE_DAMAGE);
+            GetComponent<EnemyManager>().Agent.enabled = false;
         }
     }
 
@@ -43,7 +51,7 @@ public class EnemyHealth : MonoBehaviour
         if(!dead)
         {
             dead = true;
-            GetComponentInChildren<Animator>().SetTrigger(EnemyAnimatorConstants.DIE);
+            GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.DIE);
         }       
     }
 }

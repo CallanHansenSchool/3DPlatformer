@@ -7,6 +7,7 @@ public class EnemyManager : MonoBehaviour // For enemy AI states to access
 {
     public Transform[] PatrolPoints = null;
 
+
     [Header("Movement Speeds")]
     public float PatrolSpeed = 5.0f;
     public float ChaseSpeed = 7.5f;
@@ -24,20 +25,25 @@ public class EnemyManager : MonoBehaviour // For enemy AI states to access
     [Header("Other")]
     public float IdleWaitTime = 3.0f; // The total amount of time it takes for the enemy to wait until patrolling to the next point
 
-    private Animator anim = null;
-    [HideInInspector] public NavMeshAgent Agent = null;
+    public Animator Anim = null;
+    public NavMeshAgent Agent = null;
+    private EnemyKnockback enemyKnockback;
 
     void Awake()
     {
         Agent = GetComponent<NavMeshAgent>();
-        anim = GetComponentInChildren<Animator>();
+        Anim = GetComponentInChildren<Animator>();
+        enemyKnockback = GetComponent<EnemyKnockback>();
     }
 
     public void CheckIfChase()
     {
         if (Vector3.Distance(PlayerManager.Instance.gameObject.transform.position, gameObject.transform.position) < ChaseDistance)
         {
-            anim.SetTrigger(EnemyAnimatorConstants.CHASE);
+            if(!enemyKnockback.KnockingBack)
+            {
+                Anim.SetTrigger(EnemyAnimatorConstants.CHASE);
+            }          
         }
     }
 }

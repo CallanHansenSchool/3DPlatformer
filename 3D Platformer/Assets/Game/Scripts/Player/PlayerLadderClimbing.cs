@@ -9,7 +9,7 @@ public class PlayerLadderClimbing : MonoBehaviour
 
     private CharacterController controller;
 
-    private bool canClimb = false;
+    public bool CanClimb = false;
 
     void Awake()
     {
@@ -20,11 +20,11 @@ public class PlayerLadderClimbing : MonoBehaviour
     {
         if(Debugger.Instance.Debug)
         {
-            Debugger.Instance.Climbing = canClimb;
+            Debugger.Instance.Climbing = CanClimb;
             Debugger.Instance.UpdateClimbText();
         }
         
-        if (canClimb)
+        if (CanClimb)
         {
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMBING, true);
 
@@ -49,7 +49,7 @@ public class PlayerLadderClimbing : MonoBehaviour
                 if (verticalInput < 0)
                 {
                     PlayerManager.Instance.PlayerMovement.enabled = true;
-                    canClimb = false;
+                    CanClimb = false;
                 }
             }    
         } 
@@ -60,7 +60,7 @@ public class PlayerLadderClimbing : MonoBehaviour
         if(other.gameObject.CompareTag(GameManager.CLIMBABLE_TAG))
         {
             PlayerManager.Instance.PlayerMovement.enabled = false;
-            canClimb = true;
+            CanClimb = true;
             transform.rotation = Quaternion.Euler(0f, other.transform.eulerAngles.y, 0f);
             // Debug.Log(other.transform.eulerAngles.y);           
         }
@@ -71,7 +71,7 @@ public class PlayerLadderClimbing : MonoBehaviour
         if(other.gameObject.CompareTag(GameManager.CLIMBABLE_TAG))
         {
             PlayerManager.Instance.PlayerMovement.enabled = true;
-            canClimb = false;
+            CanClimb = false;
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMBING, false);
         }
     }

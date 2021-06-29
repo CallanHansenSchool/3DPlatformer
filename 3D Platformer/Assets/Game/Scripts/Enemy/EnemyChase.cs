@@ -10,7 +10,8 @@ public class EnemyChase : StateMachineBehaviour // Manages what the enemy does w
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         enemyManager = animator.GetComponentInParent<EnemyManager>();       
-        enemyManager.Agent.speed = enemyManager.ChaseSpeed;
+        enemyManager.Agent.enabled = true;
+        enemyManager.Agent.speed = enemyManager.ChaseSpeed; 
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -24,7 +25,21 @@ public class EnemyChase : StateMachineBehaviour // Manages what the enemy does w
         }
         else if (Vector3.Distance(PlayerManager.Instance.gameObject.transform.position, animator.transform.parent.position) <= enemyManager.AttackDistance)
         {
-            animator.SetTrigger(EnemyAnimatorConstants.ATTACK);
+            int randomNumber = Random.Range(0, 2);
+
+            // Randomly decide which attack to use on player
+            if (randomNumber == 0)
+            {
+                animator.SetTrigger(EnemyAnimatorConstants.LIGHT_ATTACK);
+            }
+            else if (randomNumber == 1)
+            {
+                animator.SetTrigger(EnemyAnimatorConstants.HEAVY_ATTACK);
+            }
+            else
+            {
+                Debug.LogError("Enemy did an attack that is unavailable!");
+            }          
         }
     }
 }

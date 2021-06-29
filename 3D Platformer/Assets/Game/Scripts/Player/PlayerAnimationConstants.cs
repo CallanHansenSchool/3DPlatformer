@@ -9,7 +9,6 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string GROUNDED = "Grounded";
     public const string JUMP = "Jump";
     
-
     // Climbing
     public const string CLIMBING = "Climbing";
     public const string CLIMB_MOVE = "ClimbMove";
@@ -20,8 +19,15 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string DROWN = "Drown";
 
     // Attack Animations
-    public const string ATTACK1 = "Attack1";
-    public const string ATTACK2 = "Attack2";
+    public const string ATTACK = "Attack";
+    public const string STRONG_ATTACK_BUILDUP = "StrongAttackBuildup";
+    public const string STRONG_ATTACK = "StrongAttack";
+    public const string CANCEL_STRONG_ATTACK = "CancelStrongAttack";
+    public const string BODY_SLAM = "BodySlam";
+
+    // Block Animations
+    public const string BLOCKING = "Blocking";
+    public const string BLOCK_HIT = "BlockHit";
 
     // Spike shooting animations
     public const string AIMING = "Aiming";
@@ -33,4 +39,5 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string FACE_PLANT = "FinishFaceplant";
     public const string TEETER = "Teeter";  
     public const string SLIDING = "Sliding";  
+
 }

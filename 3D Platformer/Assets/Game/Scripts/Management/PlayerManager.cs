@@ -18,8 +18,9 @@ public class PlayerManager : MonoBehaviour
 
     public Animator Anim = null;
 
-    public PlayerMovement PlayerMovement;
-    public PlayerSlopeSlide PlayerSlopeSlide;
+    public PlayerMovement PlayerMovement = null;
+    public PlayerSlopeSlide PlayerSlopeSlide = null;
+    public PlayerLadderClimbing PlayerLadderClimb = null;
 
     void Awake()
     {
@@ -39,6 +40,7 @@ public class PlayerManager : MonoBehaviour
     {
         PlayerMovement = GetComponent<PlayerMovement>();
         PlayerSlopeSlide = GetComponent<PlayerSlopeSlide>();
+        PlayerLadderClimb = GetComponent<PlayerLadderClimbing>();
         startPos = transform.position;
         gameOverCanvas.SetActive(false);
         livesRemaining = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3);

@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement Values")]
 
-    [SerializeField] private float defaultMovementSpeed = 10; // How fast the player moves 
+    [SerializeField] private float defaultMovementSpeed = 10; // The players default movement speed
     [SerializeField] private float movementSpeed = 0; // How fast the player moves 
     [SerializeField] private float jumpVelocity = 3.5f; // How high the player jumps
  
@@ -32,9 +32,10 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Gravity")]
 
-    private float gravityScale = 9.81f; // How fast the player falls
+    public float GravityScale = 9.81f; // How fast the player falls
     [SerializeField] private float defaultGravityScale = 2f; // How fast the player falls by default
     [SerializeField] private float slopeGravityScale = 12f; // How fast the player gets pulled down when on a slope
+    public float BodySlamGravityScale = 3f; // How fast the player gets pulled down when body slamming
 
     #endregion
 
@@ -94,10 +95,16 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         groundCheckRadius = GROUND_CHECK_RADIUS_GROUND;
+        ResetMovementValues();
     }
 
     void Update()
     {
+        if(!CanControlPlayer)
+        {
+            movementSpeed = 0;
+        }
+
         // Getting user input WASD or arrow keys
         if (!GameManager.Instance.UsingController)
         {
@@ -115,11 +122,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (OnSlope() && (horizontalInput > 0 || verticalInput > 0)) // Player is moving on a slope
         {
-            gravityScale = slopeGravityScale; // For keeping the player planted on the slope
+            GravityScale = slopeGravityScale; // For keeping the player planted on the slope
         }
         else if (Grounded())
         {
-            gravityScale = defaultGravityScale;
+            GravityScale = defaultGravityScale;
         }
 
         if (Grounded())
@@ -163,18 +170,18 @@ public class PlayerMovement : MonoBehaviour
 
         if (moveDirection.magnitude >= 0.1f) // Is the player pressing any of the movement keys?
         {
-            float _targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg + GameManager.Instance.MainCamera.transform.eulerAngles.y;
-            float _angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetAngle, ref turnSmoothVelocity, rotateSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, _angle, 0f); // Apply the float values to smoothly rotate the player in the correct direction
-
-            Vector3 _moveDir = Quaternion.Euler(0f, _targetAngle, 0f) * Vector3.forward;
-            _moveDir.Normalize();
-
             if (CanControlPlayer)
             {
-                controller.Move(_moveDir * movementSpeed * Time.deltaTime); // Applying the values to move the player
-            }
+                float _targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg + GameManager.Instance.MainCamera.transform.eulerAngles.y;
+                float _angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetAngle, ref turnSmoothVelocity, rotateSmoothTime);
+                transform.rotation = Quaternion.Euler(0f, _angle, 0f); // Apply the float values to smoothly rotate the player in the correct direction
 
+                Vector3 _moveDir = Quaternion.Euler(0f, _targetAngle, 0f) * Vector3.forward;
+                _moveDir.Normalize();
+
+                controller.Move(_moveDir * movementSpeed * Time.deltaTime); // Applying the values to move the player
+
+            }
         }
 
         jumpPressedRemember -= Time.deltaTime;
@@ -201,7 +208,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(JUMP_KEY) || Input.GetKeyDown(CONTROLLER_JUMP_KEY))
         {
             jumpPressedRemember = JUMP_PRESSED_REMEMBER_TIME;
-            gravityScale = defaultGravityScale;
+            GravityScale = defaultGravityScale;
 
             if (CanDoubleJump)
             {
@@ -235,12 +242,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        jumpDirection.y = jumpDirection.y + (Physics.gravity.y * gravityScale * Time.deltaTime);
-
-        if (CanControlPlayer)
-        {
-            controller.Move(jumpDirection * Time.deltaTime);
-        }
+        jumpDirection.y = jumpDirection.y + (Physics.gravity.y * GravityScale * Time.deltaTime);
+    
+        controller.Move(jumpDirection * Time.deltaTime);
+        
 
         if (controller.velocity.y == 0 && !Grounded() && !OnSlope()) // Checks if the player is on the very edge of a platform
         {
@@ -264,6 +269,12 @@ public class PlayerMovement : MonoBehaviour
                 checkGround = true;
             }
         }
+    }
+
+    public void ResetMovementValues()
+    {
+        movementSpeed = defaultMovementSpeed;
+        GravityScale = defaultGravityScale;
     }
 
     void Jump()

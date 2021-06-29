@@ -14,6 +14,8 @@ public class Collectable : MonoBehaviour
     [SerializeField] private float moveTowardPlayerDistance = 0.3f;
     [SerializeField] private float moveTowardPlayerSpeed = 1.2f;
 
+    private const float COMMON_COLLECTABLE_HEALTH_INCREASE_AMOUNT = 0.1f;
+
     void Update()
     {
         if(Vector3.Distance(PlayerManager.Instance.gameObject.transform.position, transform.position) < moveTowardPlayerDistance)
@@ -32,12 +34,19 @@ public class Collectable : MonoBehaviour
                     // Play common collectable pickup effect
                     // Play common collectable sound
                     CollectableManager.Instance.CommonCollectablesCollected++;
+
+                    if(PlayerHealth.Instance.CurrentHealth < PlayerHealth.Instance.MaxHealth)
+                    {
+                        PlayerHealth.Instance.CurrentHealth += COMMON_COLLECTABLE_HEALTH_INCREASE_AMOUNT;
+                    }
+
                     break;
 
                 case COLLECTABLE_TYPE.RARE:
                     // Play rare collectable pickup effect
                     // Play rare collectable sound
                     CollectableManager.Instance.RareCollectablesCollected++;
+                    PlayerHealth.Instance.CurrentHealth = PlayerHealth.Instance.MaxHealth;
                     break;
 
                 case COLLECTABLE_TYPE.LIFE:

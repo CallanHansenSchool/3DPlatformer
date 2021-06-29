@@ -9,7 +9,7 @@ public class EnemyPatrol : StateMachineBehaviour // Manages what the enemy does 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         enemyManager = animator.GetComponentInParent<EnemyManager>();
-
+        enemyManager.Agent.enabled = true;
         enemyManager.Agent.speed = enemyManager.PatrolSpeed;
         GotoNextPoint();
     }

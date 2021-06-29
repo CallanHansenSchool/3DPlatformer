@@ -21,6 +21,8 @@ public class Debugger : MonoBehaviour // For debugging
 
     public bool Climbing = false;
 
+    public bool ResetPlayerPrefs;
+
     void Awake()
     {
         #region Singleton
@@ -37,6 +39,11 @@ public class Debugger : MonoBehaviour // For debugging
     void Start()
     {
         DebuggerCanvas.gameObject.SetActive(Debug);
+
+        if(ResetPlayerPrefs)
+        {
+            PlayerPrefs.DeleteAll();
+        }
     }
 
     public void SetDebug()
