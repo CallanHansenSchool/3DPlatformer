@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public const string ENEMY_TAG = "Enemy";
     public const string CLIMBABLE_TAG = "Climbable";
     public const string WATER_TAG = "Water";
+    public const string FALL_PIT = "Fallpit";
     #endregion
 
     #region SceneNames

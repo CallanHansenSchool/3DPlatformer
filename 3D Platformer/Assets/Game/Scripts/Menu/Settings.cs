@@ -10,27 +10,31 @@ public class Settings : MonoBehaviour
 {
     #region References
     [Header("Toggles")]
-    [SerializeField] private Toggle vSyncToggle;
-    [SerializeField] private Toggle fullscreenToggle;
-    [SerializeField] private Toggle postProcessingToggle;
-    [SerializeField] private Toggle grassEnabledToggle;
+    [SerializeField] private Toggle vSyncToggle = null;
+    [SerializeField] private Toggle fullscreenToggle = null;
+    [SerializeField] private Toggle postProcessingToggle = null;
+    [SerializeField] private Toggle grassEnabledToggle = null;
 
     [Header("Sliders")]
-    [SerializeField] private Slider musicVolumeSlider;
-    [SerializeField] private Slider voiceVolumeSlider;
+    [SerializeField] private Slider musicVolumeSlider = null;
+    [SerializeField] private Slider voiceVolumeSlider = null;
 
     [Header("Dropdowns")]
-    [SerializeField] private TMP_Dropdown resolutionDropdown;
-    [SerializeField] private TMP_Dropdown qualityDropdown;
+    [SerializeField] private TMP_Dropdown resolutionDropdown = null;
+    [SerializeField] private TMP_Dropdown qualityDropdown = null;
+    [SerializeField] private TMP_Dropdown grassDetailDropdown = null;
     #endregion
-
-    [SerializeField] private Terrain levelTerrain;
+    
+    [SerializeField] private Terrain lowDetailTerrain = null;
+    [SerializeField] private Terrain standardDetailTerrain = null;
+    [SerializeField] private Terrain highDetailTerrain = null;
 
     private Resolution[] resolutions;
 
-
-    void OnEnable()
+    void Awake()
     {
+        SetTerrain(PlayerPrefs.GetInt(PlayerPrefConstants.TERRAIN_DETAIL));
+
         #region Resolution Set
 
         resolutions = Screen.resolutions;
@@ -70,16 +74,47 @@ public class Settings : MonoBehaviour
         resolutionDropdown.value = _currentResolutionIndex;
 
         qualityDropdown.value = PlayerPrefs.GetInt(PlayerPrefConstants.QUALITY_SETTING, 2);
-      
+
+        grassDetailDropdown.value = PlayerPrefs.GetInt(PlayerPrefConstants.TERRAIN_DETAIL, 1);
+
         #endregion
 
         resolutionDropdown.RefreshShownValue();
     }
 
+
+    public void SetTerrain(int _terrainQualityIndex)
+    {
+        PlayerPrefs.SetInt(PlayerPrefConstants.TERRAIN_DETAIL, _terrainQualityIndex);
+
+        switch (PlayerPrefs.GetInt(PlayerPrefConstants.TERRAIN_DETAIL, 1))
+        {
+            case 0:
+                lowDetailTerrain.gameObject.SetActive(true);
+                standardDetailTerrain.gameObject.SetActive(false);
+                highDetailTerrain.gameObject.SetActive(false);
+                break;
+
+            case 1:
+                lowDetailTerrain.gameObject.SetActive(false);
+                standardDetailTerrain.gameObject.SetActive(true);
+                highDetailTerrain.gameObject.SetActive(false);
+                break;
+
+            case 2:
+                lowDetailTerrain.gameObject.SetActive(false);
+                standardDetailTerrain.gameObject.SetActive(false);
+                highDetailTerrain.gameObject.SetActive(true);
+                break;
+        }
+    }
+
     public void SetGrass(bool _setGrass)
     {
         PlayerPrefs.SetInt(PlayerPrefConstants.GRASS_SETTING, Convert.ToInt16(_setGrass));
-        levelTerrain.drawTreesAndFoliage = _setGrass;
+        lowDetailTerrain.drawTreesAndFoliage = _setGrass;
+        standardDetailTerrain.drawTreesAndFoliage = _setGrass;
+        highDetailTerrain.drawTreesAndFoliage = _setGrass;
     }
 
     public void SetVSync(bool _setVsync) // Set whether vSync should be enabled or disabled

@@ -14,5 +14,7 @@ public class PlayerPrefConstants
     public const string GRASS_SETTING = "GrassEnabledSetting";
 
     public const string QUALITY_SETTING = "QualitySetting";
+
+    public const string TERRAIN_DETAIL = "TerrainDetail";
     #endregion
 }

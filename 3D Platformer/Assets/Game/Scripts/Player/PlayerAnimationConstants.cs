@@ -40,4 +40,6 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string TEETER = "Teeter";  
     public const string SLIDING = "Sliding";  
 
+    // OTHER
+    public const string IN_COMBAT = "InCombat";  
 }

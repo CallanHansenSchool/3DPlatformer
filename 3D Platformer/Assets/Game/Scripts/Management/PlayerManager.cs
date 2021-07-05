@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerMovement PlayerMovement = null;
     public PlayerSlopeSlide PlayerSlopeSlide = null;
     public PlayerLadderClimbing PlayerLadderClimb = null;
+    public PlayerMelee PlayerMelee = null;
 
     void Awake()
     {
@@ -41,6 +42,7 @@ public class PlayerManager : MonoBehaviour
         PlayerMovement = GetComponent<PlayerMovement>();
         PlayerSlopeSlide = GetComponent<PlayerSlopeSlide>();
         PlayerLadderClimb = GetComponent<PlayerLadderClimbing>();
+        PlayerMelee = GetComponent<PlayerMelee>();
         startPos = transform.position;
         gameOverCanvas.SetActive(false);
         livesRemaining = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3);
@@ -50,18 +52,30 @@ public class PlayerManager : MonoBehaviour
     {
         if (!Dead)
         {
-            if(deathType == "")
+            switch(deathType)
             {
-                Anim.SetTrigger(PlayerAnimationConstants.DIE);
-            } else if (deathType == "Enemy")
-            {
-                Anim.SetTrigger(PlayerAnimationConstants.DIE);
-            } else if(deathType == "Drown")
-            {
-                Anim.SetTrigger(PlayerAnimationConstants.DROWN);
-            }         
+                case "":
+                    Anim.SetTrigger(PlayerAnimationConstants.DIE);
+                    break;
 
+                case "Enemy":
+                    Anim.SetTrigger(PlayerAnimationConstants.DIE);
+                    break;
+
+                case "Drown":
+                    Anim.SetTrigger(PlayerAnimationConstants.DROWN);
+                    break;
+
+                case "Fallpit":
+                    Anim.SetTrigger(PlayerAnimationConstants.DIE); // Add new Fallpit death animation later
+                    break;
+            }     
+
+            // Disable all player components to stop player input
             PlayerMovement.enabled = false;
+            PlayerMelee.enabled = false;
+            PlayerSlopeSlide.enabled = false;
+            PlayerLadderClimb.enabled = false;
 
             livesRemaining -= 1; // Taking away a life
             PlayerPrefs.SetInt(PlayerPrefConstants.PLAYER_LIVES, livesRemaining);  // Saving the value
@@ -103,11 +117,16 @@ public class PlayerManager : MonoBehaviour
         Physics.SyncTransforms(); // Update the changed position
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)  // Called when the player touches something
     {
         if (other.gameObject.CompareTag(GameManager.WATER_TAG))
         {          
             StartCoroutine(BeginDeath("Drown"));
+        } 
+        
+        if(other.gameObject.CompareTag(GameManager.FALL_PIT))
+        {
+            StartCoroutine(BeginDeath("FallPit"));
         }
     }
 }

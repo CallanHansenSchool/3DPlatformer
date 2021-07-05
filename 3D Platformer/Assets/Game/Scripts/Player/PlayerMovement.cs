@@ -94,6 +94,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         groundCheckRadius = GROUND_CHECK_RADIUS_GROUND;
         ResetMovementValues();
     }
@@ -205,48 +207,50 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(JUMP_KEY) || Input.GetKeyDown(CONTROLLER_JUMP_KEY))
+        if(CanControlPlayer)
         {
-            jumpPressedRemember = JUMP_PRESSED_REMEMBER_TIME;
-            GravityScale = defaultGravityScale;
-
-            if (CanDoubleJump)
+            if (Input.GetKeyDown(JUMP_KEY) || Input.GetKeyDown(CONTROLLER_JUMP_KEY))
             {
-                Jump();
+                jumpPressedRemember = JUMP_PRESSED_REMEMBER_TIME;
+                GravityScale = defaultGravityScale;
+
+                if (CanDoubleJump)
+                {
+                    Jump();
+                    CanDoubleJump = false;
+                }
+            }
+
+            if (jumpPressedRemember > 0 && groundedRemember > 0)
+            {
+                jumpPressedRemember = 0;
+                groundedRemember = 0;
+
+                if (!CanDoubleJump)
+                {
+                    Jump();
+                    CanDoubleJump = true;
+                }
+            }
+
+            if (jumpDirection.y < -FALLING_TIME_BEFORE_NO_DOUBLE_JUMP) // Don't allow the player to double jump if they have been falling for a certain amount of time
+            {
                 CanDoubleJump = false;
             }
-        }
 
-        if (jumpPressedRemember > 0 && groundedRemember > 0)
-        {
-            jumpPressedRemember = 0;
-            groundedRemember = 0;
-
-            if (!CanDoubleJump)
+            if (Input.GetKeyUp(JUMP_KEY) || Input.GetKeyUp(CONTROLLER_JUMP_KEY))
             {
-                Jump();
-                CanDoubleJump = true;
+                if (jumpDirection.y > 0)
+                {
+                    jumpDirection.y = jumpDirection.y * jumpHeightCut;
+                }
             }
-        }
-
-        if (jumpDirection.y < -FALLING_TIME_BEFORE_NO_DOUBLE_JUMP) // Don't allow the player to double jump if they have been falling for a certain amount of time
-        {
-            CanDoubleJump = false;
-        }
-
-        if (Input.GetKeyUp(JUMP_KEY) || Input.GetKeyUp(CONTROLLER_JUMP_KEY))
-        {
-            if (jumpDirection.y > 0)
-            {
-                jumpDirection.y = jumpDirection.y * jumpHeightCut;
-            }
-        }
+        }       
 
         jumpDirection.y = jumpDirection.y + (Physics.gravity.y * GravityScale * Time.deltaTime);
     
         controller.Move(jumpDirection * Time.deltaTime);
         
-
         if (controller.velocity.y == 0 && !Grounded() && !OnSlope()) // Checks if the player is on the very edge of a platform
         {
             OnEdgeGrounded = true;

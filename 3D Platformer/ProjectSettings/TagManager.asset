@@ -12,6 +12,7 @@ TagManager:
   - Ledge
   - Water
   - EnemyAttack
+  - Fallpit
   layers:
   - Default
   - TransparentFX

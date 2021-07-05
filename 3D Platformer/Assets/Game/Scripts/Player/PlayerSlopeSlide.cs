@@ -23,6 +23,7 @@ public class PlayerSlopeSlide : MonoBehaviour
                 GetComponent<CharacterController>().enabled = true;
                 GetComponent<CapsuleCollider>().enabled = false;
                 PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.SLIDING, false);
+                PlayerManager.Instance.PlayerMovement.ResetMovementValues();
                 addedRB = false;
             }
         }

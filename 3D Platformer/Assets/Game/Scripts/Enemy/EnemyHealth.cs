@@ -52,6 +52,7 @@ public class EnemyHealth : MonoBehaviour
         {
             dead = true;
             GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.DIE);
+            transform.tag = "Untagged";
         }       
     }
 }

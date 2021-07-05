@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3550931667793390013}
   - component: {fileID: 3550931667793390014}
   - component: {fileID: 3550931667793390015}
+  - component: {fileID: 2596957064537792672}
   m_Layer: 8
   m_Name: CommonCollectable
   m_TagString: Untagged
@@ -53,6 +54,7 @@ MeshRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -112,3 +114,22 @@ MonoBehaviour:
   Letter: 65
   moveTowardPlayerDistance: 2.5
   moveTowardPlayerSpeed: 15
+--- !u!114 &2596957064537792672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3550931667793390001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e20caf39b9d920c488cd171776ca78c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  degreesPerSecond: 30
+  amplitude: 0.25
+  frequency: 1
+  minRandomTurnSpeed: 50
+  maxRandomTurnSpeed: 75
+  minRandomFrequency: 0.7
+  maxRandomFrequency: 0.95

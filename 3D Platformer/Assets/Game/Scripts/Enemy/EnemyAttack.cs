@@ -31,9 +31,17 @@ public class EnemyAttack : StateMachineBehaviour // Manages what the enemy does 
             {
                 if (!PlayerManager.Instance.Dead) // Make sure that the player isnt dead
                 {
-                    PlayerHealth.Instance.TakeDamage(enemyManager.AttackStrength);                   
-  
+                    if (!PlayerManager.Instance.PlayerMelee.Blocking)
+                    {
+                        PlayerHealth.Instance.TakeDamage(enemyManager.AttackStrength);
+                    } else
+                    {
+                        animator.SetTrigger(EnemyAnimatorConstants.TAKE_DAMAGE);
+                    }
+                   
+
                     timeSinceLastAttack = enemyManager.AttackSpeed;
+
                 } else
                 {
                     animator.SetTrigger(EnemyAnimatorConstants.PATROL);

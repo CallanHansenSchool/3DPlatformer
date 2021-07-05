@@ -23,7 +23,7 @@ public class EnemyChase : StateMachineBehaviour // Manages what the enemy does w
         {
             animator.SetTrigger(EnemyAnimatorConstants.PATROL);
         }
-        else if (Vector3.Distance(PlayerManager.Instance.gameObject.transform.position, animator.transform.parent.position) <= enemyManager.AttackDistance)
+        else if (Vector3.Distance(PlayerManager.Instance.gameObject.transform.position, animator.transform.parent.position) <= enemyManager.AttackDistance) // Enemy is at attacking range
         {
             int randomNumber = Random.Range(0, 2);
 

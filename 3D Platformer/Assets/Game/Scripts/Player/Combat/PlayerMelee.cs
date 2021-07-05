@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMelee : MonoBehaviour
 {
     private const KeyCode ATTACK_KEY = KeyCode.Mouse0;
-    private const KeyCode BLOCK_KEY = KeyCode.Mouse2;
+    private const KeyCode BLOCK_KEY = KeyCode.Mouse1;
     private const KeyCode BODY_SLAM_KEY = KeyCode.E;
 
     private float attackSpeed = 1.5f;
@@ -75,6 +75,7 @@ public class PlayerMelee : MonoBehaviour
         if(Input.GetKeyDown(ATTACK_KEY))
         {         
             timeHeldForHeavyAttack = 0;
+            Blocking = false;
         }
 
         if (Input.GetKey(ATTACK_KEY))
@@ -148,7 +149,8 @@ public class PlayerMelee : MonoBehaviour
             if(!PlayerManager.Instance.PlayerMovement.Grounded())
             {
                 PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.BODY_SLAM);
-                PlayerManager.Instance.PlayerMovement.CanControlPlayer = false;
+                PlayerManager.Instance.PlayerMovement.CanControlPlayer = false; 
+                PlayerManager.Instance.PlayerMelee.enabled = false;
                 PlayerManager.Instance.PlayerMovement.GravityScale = PlayerManager.Instance.PlayerMovement.BodySlamGravityScale;
                 StartCoroutine(ShowAttackBox(bodySlamMeleeAttackBox, 1.5f));
             }
@@ -182,6 +184,7 @@ public class PlayerMelee : MonoBehaviour
                                     attackIndex = 0;
                                 }
 
+                                Blocking = false;
                                 attackIndex++;
                                 PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.ATTACK + attackIndex.ToString());
                                 timeSinceLastHit = 0;
@@ -196,6 +199,7 @@ public class PlayerMelee : MonoBehaviour
 
     void HeavyAttack()
     {
+        Blocking = false;
         PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.STRONG_ATTACK);
         StartCoroutine(ShowAttackBox(heavyMeleeAttackBox));
         timeHeldForHeavyAttack = 0;
