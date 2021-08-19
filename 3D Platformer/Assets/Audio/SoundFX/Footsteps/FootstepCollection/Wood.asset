@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b615eb6aa146acf4688193d6aba3eeb4, type: 3}
+  m_Name: Wood
+  m_EditorClassIdentifier: 
+  footstepSounds:
+  - {fileID: 8300000, guid: ebb726002d4e5dd42823a7463ca381fb, type: 3}
+  - {fileID: 8300000, guid: e48a6e556e845834e89d9f183ca9f88f, type: 3}
+  - {fileID: 8300000, guid: 8a21d91ad30ab794cb441e0731cc49cd, type: 3}
+  - {fileID: 8300000, guid: 7f883c5a1388a2d4dab93e1d184ba3cd, type: 3}
+  - {fileID: 8300000, guid: a37e3350e83de6440b0e678af10861d9, type: 3}
+  - {fileID: 8300000, guid: ba1e83e4f669fcf4bbcc99ed21c2af8c, type: 3}
+  - {fileID: 8300000, guid: a37e3350e83de6440b0e678af10861d9, type: 3}
+  - {fileID: 8300000, guid: 7f883c5a1388a2d4dab93e1d184ba3cd, type: 3}
+  - {fileID: 8300000, guid: 8a21d91ad30ab794cb441e0731cc49cd, type: 3}
+  - {fileID: 8300000, guid: e48a6e556e845834e89d9f183ca9f88f, type: 3}
+  jumpSound: {fileID: 0}
+  landSound: {fileID: 8300000, guid: 0aa05ca3cd950b74ab700d0d14d67253, type: 3}
+  FootstepVolume: 0.1
+  LandVolume: 0.75
+  JumpVolume: 0.5

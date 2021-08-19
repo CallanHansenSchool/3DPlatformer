@@ -41,10 +41,32 @@ public class PlayerHealth : MonoBehaviour // Manages the players health
         {
             PlayerManager.Instance.StartCoroutine(PlayerManager.Instance.BeginDeath()); // Kill the player
         }
-    }
+    } 
 
-    public void TakeDamage(float _damageToTake)
+    public void TakeDamage(float _damageToTake, bool _lightAttack = false)
     {
+        if (!PlayerManager.Instance.PlayerMelee.Blocking)
+        {
+            if(!PlayerManager.Instance.Dead)
+            {
+                if (PlayerManager.Instance.PlayerMovement.CanControlPlayer)
+                {
+                    if (_lightAttack)
+                    {
+                        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.LIGHT_ATTACK_HIT_REACTION);
+                        AudioManager.Instance.PlayAudio("PlayerLightAttackHitReaction");
+                        Debug.Log("Hit with light attack");
+                    }
+                    else
+                    {
+                        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.HEAVY_ATTACK_HIT_REACTION);
+                        AudioManager.Instance.PlayAudio("PlayerHeavyAttackHitReaction");
+                        Debug.Log("Hit with heavy attack");
+                    }
+                }               
+            }          
+        }
+
         CurrentHealth -= _damageToTake;
         CheckHealth();
         HUD.Instance.UpdateHUD();

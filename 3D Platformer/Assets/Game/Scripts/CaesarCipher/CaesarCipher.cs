@@ -35,12 +35,12 @@ public class CaesarCipher : MonoBehaviour
 
     public void UpdateCipher()
     {
-        string cipherText = Encipher(GameManager.Instance.WantedWord, GameManager.Instance.EncryptionAmount);
+        string cipherText = Encipher(LetterManager.Instance.WantedWord, LetterManager.Instance.EncryptionAmount);
         EncryptedSentence.text = cipherText;
-        GameManager.Instance.EncryptedSentence = cipherText;
-        EncryptionAmount.text = GameManager.Instance.EncryptionAmount.ToString();
+        LetterManager.Instance.EncryptedSentence = cipherText;
+        EncryptionAmount.text = LetterManager.Instance.EncryptionAmount.ToString();
 
         //string decipheredSentence = Decipher(cipherText, GameManager.Instance.EncryptionAmount);
-        DecryptedSentence.text = GameManager.Instance.CurrentSentence;
+        DecryptedSentence.text = LetterManager.Instance.CurrentSentence;
     }
 }

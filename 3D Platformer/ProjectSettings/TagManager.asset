@@ -11,8 +11,9 @@ TagManager:
   - LadderEnd
   - Ledge
   - Water
-  - EnemyAttack
   - Fallpit
+  - EnemyLightAttack
+  - EnemyHeavyAttack
   layers:
   - Default
   - TransparentFX

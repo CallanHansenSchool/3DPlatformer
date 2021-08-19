@@ -9,6 +9,10 @@ public class CollectableManager : MonoBehaviour // For managing the collectable 
 
     public static CollectableManager Instance;
 
+    private float timeSinceLastCollectable = 0;
+
+    private bool comboStarted;
+
     void Awake()
     {
         #region Singleton
@@ -22,6 +26,22 @@ public class CollectableManager : MonoBehaviour // For managing the collectable 
         #endregion
     }
 
+    void Update()
+    {
+        if(comboStarted)
+        {
+            if (timeSinceLastCollectable < 0)
+            {
+                comboStarted = false;
+       
+            }
+            else
+            {
+                timeSinceLastCollectable -= Time.deltaTime;
+            }
+        }      
+    }
+    
     public void CheckCollectables()
     {
         if(CommonCollectablesCollected >= COMMON_COLLECTABLES_NEEDED_FOR_LIFE)
@@ -29,6 +49,7 @@ public class CollectableManager : MonoBehaviour // For managing the collectable 
             PlayerPrefs.SetInt(PlayerPrefConstants.PLAYER_LIVES, PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES) + 1); // Add a life
             HUD.Instance.UpdateHUD();
             CommonCollectablesCollected -= COMMON_COLLECTABLES_NEEDED_FOR_LIFE;
+            comboStarted = true;
         }
     }
 }

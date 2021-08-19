@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerLadderClimbing : MonoBehaviour
 {
     [SerializeField] private float climbSpeed = 1.5f;
-    [SerializeField] private float jumpOffAmount = 1.5f;
 
     private CharacterController controller;
 
@@ -18,12 +17,12 @@ public class PlayerLadderClimbing : MonoBehaviour
 
     void Update()
     {
-        if(Debugger.Instance.Debug)
+        if (Debugger.Instance.Debug)
         {
             Debugger.Instance.Climbing = CanClimb;
             Debugger.Instance.UpdateClimbText();
         }
-        
+
         if (CanClimb)
         {
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMBING, true);
@@ -32,12 +31,23 @@ public class PlayerLadderClimbing : MonoBehaviour
 
             float verticalInput = Input.GetAxis("Vertical");
 
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                AudioManager.Instance.PlayAudio("ClimbingLadder");
+            }
+
+            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                AudioManager.Instance.StopAudio("ClimbingLadder");
+            }
+
             if (Mathf.Abs(verticalInput) > 0.1f)
             {
                 PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMB_MOVE, true);
-            } else
+            }
+            else
             {
-                PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMB_MOVE, false);
+                PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMB_MOVE, false);               
             }
 
             Vector3 _movementVector = new Vector3(0, verticalInput * climbSpeed, 0);
@@ -52,13 +62,14 @@ public class PlayerLadderClimbing : MonoBehaviour
                     CanClimb = false;
                 }
             }    
-        } 
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag(GameManager.CLIMBABLE_TAG))
         {
+            AudioManager.Instance.PlayAudio("ClimbingLadder");
             PlayerManager.Instance.PlayerMovement.enabled = false;
             CanClimb = true;
             transform.rotation = Quaternion.Euler(0f, other.transform.eulerAngles.y, 0f);
@@ -73,6 +84,7 @@ public class PlayerLadderClimbing : MonoBehaviour
             PlayerManager.Instance.PlayerMovement.enabled = true;
             CanClimb = false;
             PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.CLIMBING, false);
+            AudioManager.Instance.StopAudio("ClimbingLadder");
         }
     }
 }

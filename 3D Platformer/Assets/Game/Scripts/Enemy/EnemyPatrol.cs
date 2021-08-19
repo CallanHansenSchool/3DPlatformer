@@ -22,7 +22,7 @@ public class EnemyPatrol : StateMachineBehaviour // Manages what the enemy does 
             // Cycle back to the start when needed
             destinationPoint = (destinationPoint + 1) % enemyManager.PatrolPoints.Length;
 
-            enemyManager.Agent.destination = enemyManager.PatrolPoints[destinationPoint].position;
+            enemyManager.Agent.SetDestination(enemyManager.PatrolPoints[destinationPoint].position);
         }  
     }
 

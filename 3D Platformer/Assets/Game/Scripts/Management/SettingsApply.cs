@@ -6,6 +6,7 @@ using UnityEngine.Rendering.PostProcessing;
 public class SettingsApply : MonoBehaviour
 {
     [SerializeField] private GameObject postProcessingObject = null;
+    [SerializeField] private GameObject settingsMenu = null;
 
     public static SettingsApply Instance;
 
@@ -26,15 +27,16 @@ public class SettingsApply : MonoBehaviour
         {
             Debug.LogError("There is no Post Processing Object!");
         } else
-        {
+        {            
             ApplySettings();
+            settingsMenu.SetActive(false);
         }
-
-        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt(PlayerPrefConstants.QUALITY_SETTING, 2));
     }
 
     public void ApplySettings()
     {
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt(PlayerPrefConstants.QUALITY_SETTING, 2));
+             
         // Should post processing be enabled?
         if (PlayerPrefs.GetInt(PlayerPrefConstants.POST_PROCESSING_SETTING, 1) == 0)
         {
@@ -43,6 +45,6 @@ public class SettingsApply : MonoBehaviour
         else
         {
             postProcessingObject.SetActive(true);
-        }   
+        }       
     }
 }

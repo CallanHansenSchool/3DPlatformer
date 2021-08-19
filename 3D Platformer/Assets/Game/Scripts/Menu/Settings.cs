@@ -66,8 +66,10 @@ public class Settings : MonoBehaviour
         vSyncToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.VSYNC_SETTING));
         fullscreenToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.FULLSCREEN_SETTING, 1));
         postProcessingToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.POST_PROCESSING_SETTING, 1));
-        grassEnabledToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.GRASS_SETTING, 1));
 
+        grassEnabledToggle.isOn = Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.GRASS_SETTING, 1));
+        SetGrass(Convert.ToBoolean(PlayerPrefs.GetInt(PlayerPrefConstants.GRASS_SETTING, 1)));
+     
         musicVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.MUSIC_VOLUME_SETTING);
         voiceVolumeSlider.value = PlayerPrefs.GetFloat(PlayerPrefConstants.VOICE_VOLUME_SETTING);
 
@@ -81,7 +83,6 @@ public class Settings : MonoBehaviour
 
         resolutionDropdown.RefreshShownValue();
     }
-
 
     public void SetTerrain(int _terrainQualityIndex)
     {

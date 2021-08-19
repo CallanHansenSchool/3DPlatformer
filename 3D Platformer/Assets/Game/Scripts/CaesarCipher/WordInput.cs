@@ -24,10 +24,10 @@ public class WordInput : MonoBehaviour
 
     public void CheckWord()
     {
-        if (string.Equals(wordInputField.text, GameManager.Instance.WantedWord, StringComparison.OrdinalIgnoreCase)) // Checking if the players input is the same as the correct word, ignoring caps
+        if (string.Equals(wordInputField.text, LetterManager.Instance.WantedWord, StringComparison.OrdinalIgnoreCase)) // Checking if the players input is the same as the correct word, ignoring caps
         {
             wordStatusText.text = CORRECT_TEXT;
-            SceneManagement.Instance.LoadScene(GameManager.MAIN_MENU);
+            SceneManagement.Instance.LoadScene(GameManager.CREDITS);
         } else
         {
             wordStatusText.text = WRONG_TEXT;

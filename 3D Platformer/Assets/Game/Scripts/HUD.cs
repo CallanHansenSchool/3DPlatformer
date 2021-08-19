@@ -6,10 +6,8 @@ using UnityEngine.UI;
 
 public class HUD : MonoBehaviour // Update and handle the HUD
 {
-
     #region Sentences
     private const string ALL_LETTERS_COLLECTED = "All the letters have been collected! Approach the door.";
-    private const string LETTERS_COLLECTED = "Letters Collected: ";
     #endregion
 
     public Slider HealthBarSlider;
@@ -42,8 +40,6 @@ public class HUD : MonoBehaviour // Update and handle the HUD
 
     void Start()
     {
-        amountOfLetters = 0;
-
         AllLettersCollectedText.text = "";
         UpdateHUD();
 
@@ -70,15 +66,14 @@ public class HUD : MonoBehaviour // Update and handle the HUD
     public void UpdateHUD()
     {
         CommonCollectableText.text = CollectableManager.Instance.CommonCollectablesCollected.ToString() + " / " + CollectableManager.COMMON_COLLECTABLES_NEEDED_FOR_LIFE.ToString();
-        RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString() + " / " + (GameManager.Instance.RareCollectables.Length).ToString();
-  
+        RareCollectableText.text = CollectableManager.Instance.RareCollectablesCollected.ToString() + " / " + (GameManager.Instance.RareCollectables.Length).ToString(); 
       
-        LettersCollectedText.text = LETTERS_COLLECTED + GameManager.Instance.CurrentSentence;
+        LettersCollectedText.text = LetterManager.Instance.CurrentSentence;
         LivesRemainingText.text = PlayerPrefs.GetInt(PlayerPrefConstants.PLAYER_LIVES, 3).ToString();
 
         HealthBarSlider.value = PlayerHealth.Instance.CurrentHealth;
 
-        if (GameManager.Instance.LettersCollected.Count == GameManager.Instance.WantedWord.Length) // All letters are collected
+        if (LetterManager.Instance.LettersCollected.Count == LetterManager.Instance.WantedWord.Length) // All letters are collected
         {
             AllLettersCollectedText.text = ALL_LETTERS_COLLECTED;
         }

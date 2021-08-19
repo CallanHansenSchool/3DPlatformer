@@ -6,6 +6,7 @@ public class GettingUp : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.gameObject.GetComponentInParent<PlayerMovement>().enabled = true;
+        PlayerManager.Instance.PlayerMovement.CanControlPlayer = true;
+        PlayerManager.Instance.PlayerMovement.ResetMovementValues();
     }
 }

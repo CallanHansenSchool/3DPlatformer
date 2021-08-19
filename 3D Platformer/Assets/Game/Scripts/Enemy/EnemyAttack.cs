@@ -7,7 +7,8 @@ public class EnemyAttack : StateMachineBehaviour // Manages what the enemy does 
     private EnemyManager enemyManager = null;
 
     private float timeSinceLastAttack = 0;
-    private float timeForCollider;
+
+    private int randomAttack;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -16,6 +17,7 @@ public class EnemyAttack : StateMachineBehaviour // Manages what the enemy does 
         enemyManager.Agent.enabled = false;
         enemyManager.Agent.speed = enemyManager.AttackingMovementSpeed;
         timeSinceLastAttack = enemyManager.AttackSpeed;
+        Attack(animator);    
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -25,32 +27,75 @@ public class EnemyAttack : StateMachineBehaviour // Manages what the enemy does 
         {
             animator.SetTrigger(EnemyAnimatorConstants.CHASE);
         }
-        else
+        else // The player is in attack range
         {
-            if (timeSinceLastAttack < 0)
+            Attack(animator);
+        }
+    }
+
+    void Attack(Animator animator)
+    {
+        if (timeSinceLastAttack < 0)
+        {
+            if (!PlayerManager.Instance.Dead) // Make sure that the player isnt dead
             {
-                if (!PlayerManager.Instance.Dead) // Make sure that the player isnt dead
+                randomAttack = Random.Range(0, 3);
+
+                if (!PlayerManager.Instance.PlayerMelee.Blocking)
                 {
-                    if (!PlayerManager.Instance.PlayerMelee.Blocking)
+                    switch (randomAttack)
                     {
-                        PlayerHealth.Instance.TakeDamage(enemyManager.AttackStrength);
-                    } else
-                    {
-                        animator.SetTrigger(EnemyAnimatorConstants.TAKE_DAMAGE);
+                        case 0:
+                            animator.SetTrigger(EnemyAnimatorConstants.LIGHT_ATTACK);
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.LightAttackStrength, true);
+                            break;
+
+                        case 1:
+                            animator.SetTrigger(EnemyAnimatorConstants.HEAVY_ATTACK);
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.HeavyAttackStrength, false);
+                            break;
+
+                        case 2:
+                            animator.SetTrigger(EnemyAnimatorConstants.HEAVY_ATTACK);
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.HeavyAttackStrength, false);
+                            break;
                     }
-                   
-
-                    timeSinceLastAttack = enemyManager.AttackSpeed;
-
-                } else
-                {
-                    animator.SetTrigger(EnemyAnimatorConstants.PATROL);
                 }
+                else
+                {
+                    switch (randomAttack) // Take half the damage if blocking
+                    {
+                        case 0:
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.LightAttackStrength * 0.5f, true);
+                            break;
+
+                        case 1:
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.HeavyAttackStrength * 0.5f, false);
+                            break;
+
+                        case 2:
+                            //PlayerHealth.Instance.TakeDamage(enemyManager.HeavyAttackStrength * 0.5f, false);
+                            break;
+                    }
+
+                    //animator.SetTrigger(EnemyAnimatorConstants.TAKE_DAMAGE);
+
+                
+                }
+
+
+
+                timeSinceLastAttack = enemyManager.AttackSpeed;
+
             }
             else
             {
-                timeSinceLastAttack -= Time.deltaTime;
+                animator.SetTrigger(EnemyAnimatorConstants.PATROL);
             }
+        }
+        else
+        {
+            timeSinceLastAttack -= Time.deltaTime;
         }
     }
 }

@@ -11,13 +11,13 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Slider healthBar = null;
 
     private bool dead = false;
-    private EnemyKnockback enemyknockback = null;
+
+    public GameObject HealthBurst = null;
+    public GameObject EnemyCanvas = null;
 
     // Start is called before the first frame update
     void Start()
     {
-        enemyknockback = GetComponent<EnemyKnockback>();
-
         CurrentHealth = startingHealth;
 
         healthBar.maxValue = startingHealth;
@@ -29,19 +29,26 @@ public class EnemyHealth : MonoBehaviour
         healthBar.value = CurrentHealth;
     }
 
-    public void TakeDamage(float damageToTake)
-    {
+    public void TakeDamage(float damageToTake, bool _lightAttack)
+    {     
         CurrentHealth -= damageToTake;
         UpdateUI();
-
-        enemyknockback.hitNumber++;
 
         if (CurrentHealth <= 0)
         {
             Die();
         } else
         {
-            GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.TAKE_DAMAGE);
+            if(_lightAttack)
+            {
+                GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.LIGHT_ATTACK_HIT_REACTION);
+            } else
+            {
+                GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.HEAVY_ATTACK_HIT_REACTION);
+            }
+
+            AudioManager.Instance.PlayAudio("SnakeTakeDamage");
+
             GetComponent<EnemyManager>().Agent.enabled = false;
         }
     }
@@ -50,6 +57,8 @@ public class EnemyHealth : MonoBehaviour
     {
         if(!dead)
         {
+            EnemyCanvas.SetActive(false);
+            AudioManager.Instance.PlayAudio("SnakeDie");
             dead = true;
             GetComponent<EnemyManager>().Anim.SetTrigger(EnemyAnimatorConstants.DIE);
             transform.tag = "Untagged";

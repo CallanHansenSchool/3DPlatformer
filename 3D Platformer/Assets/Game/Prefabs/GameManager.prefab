@@ -19,7 +19,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4999770937509148420
 Transform:
@@ -49,12 +49,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 0}
   MainVirtualCamera: {fileID: 0}
-  WantedWord: Apple
+  aimingCamera: {fileID: 0}
+  WantedWord: Crash
   EncryptedSentence: 
   CurrentSentence: 
   LettersCollected: 
   EncryptionAmount: 2
   NumOfLettersCollected: 0
+  RareCollectables:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   letterCollectableLocations:
   - {fileID: 0}
   - {fileID: 0}
@@ -62,6 +74,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   letterCollectablePrefab: {fileID: 5219978296398665116, guid: 5a651d64e5db23948b8a22d085b27072, type: 3}
+  UsingController: 0
 --- !u!114 &4999770937736943379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,8 +103,8 @@ MonoBehaviour:
   DebuggerCanvas: {fileID: 0}
   SlopeDebug: {fileID: 0}
   ClimbDebug: {fileID: 0}
-  SlopeAngleDebug: {fileID: 0}
   Climbing: 0
+  ResetPlayerPrefs: 0
 --- !u!114 &8111203050371244950
 MonoBehaviour:
   m_ObjectHideFlags: 0

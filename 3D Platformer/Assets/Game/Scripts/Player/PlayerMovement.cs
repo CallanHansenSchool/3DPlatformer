@@ -215,9 +215,10 @@ public class PlayerMovement : MonoBehaviour
                 GravityScale = defaultGravityScale;
 
                 if (CanDoubleJump)
-                {
+                {                   
                     Jump();
                     CanDoubleJump = false;
+                    AudioManager.Instance.PlayAudio("DoubleJump");
                 }
             }
 
@@ -230,10 +231,11 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Jump();
                     CanDoubleJump = true;
+                    AudioManager.Instance.PlayAudio("Jump");
                 }
             }
 
-            if (jumpDirection.y < -FALLING_TIME_BEFORE_NO_DOUBLE_JUMP) // Don't allow the player to double jump if they have been falling for a certain amount of time
+            if (jumpDirection.y < -FALLING_TIME_BEFORE_NO_DOUBLE_JUMP) // Don't allow the player to double jump if their y velocity is lower than a certain value
             {
                 CanDoubleJump = false;
             }
@@ -286,7 +288,7 @@ public class PlayerMovement : MonoBehaviour
         checkGround = false;
         timeUntilNextCheck = TIME_UNTIL_NEXT_CHECK;
         jumpDirection.y = jumpVelocity;
-        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.JUMP);    
+        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.JUMP);
     }
 
     void CheckSteepSlope()

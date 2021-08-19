@@ -38,8 +38,10 @@ public class PlayerAnimationConstants : MonoBehaviour// A list of Animator() com
     public const string DOUBLE_JUMP = "DoubleJump";
     public const string FACE_PLANT = "FinishFaceplant";
     public const string TEETER = "Teeter";  
-    public const string SLIDING = "Sliding";  
+    public const string SLIDING = "Sliding";
 
+    public const string LIGHT_ATTACK_HIT_REACTION = "LightAttackReaction";
+    public const string HEAVY_ATTACK_HIT_REACTION = "HeavyAttackReaction";
     // OTHER
     public const string IN_COMBAT = "InCombat";  
 }

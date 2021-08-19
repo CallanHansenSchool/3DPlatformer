@@ -42,7 +42,7 @@ public class Collectable : MonoBehaviour
                     // Play common collectable pickup effect
                     // Play common collectable sound
                     CollectableManager.Instance.CommonCollectablesCollected++;
-                   
+                    AudioManager.Instance.PlayAudio("CommonCollectable");
                     break;
 
                 case COLLECTABLE_TYPE.RARE:
@@ -50,6 +50,7 @@ public class Collectable : MonoBehaviour
                     // Play rare collectable sound
                     CollectableManager.Instance.RareCollectablesCollected++;
                     PlayerHealth.Instance.CurrentHealth = PlayerHealth.Instance.MaxHealth;
+                    AudioManager.Instance.PlayAudio("RareCollectable");
                     break;
 
                 case COLLECTABLE_TYPE.LIFE:
@@ -75,9 +76,10 @@ public class Collectable : MonoBehaviour
                     // Play letter collectable sound
                     gameObject.SetActive(false);
                     HUD.Instance.UpdateLetterCount();
-                    GameManager.Instance.NumOfLettersCollected++;
-                    GameManager.Instance.LettersCollected.Add(Letter);
-                    GameManager.Instance.UpdateLettersUI();
+                    LetterManager.Instance.NumOfLettersCollected++;
+                    LetterManager.Instance.LettersCollected.Add(Letter);
+                    LetterManager.Instance.UpdateLettersUI();
+                    AudioManager.Instance.PlayAudio("LetterCollectable");
                     break;
             }
 

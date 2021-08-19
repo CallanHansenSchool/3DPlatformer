@@ -13,7 +13,7 @@ public class Faceplant : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         timeToFaceplant = TotalTimeToFaceplant;
-        animator.gameObject.GetComponentInParent<PlayerMovement>().enabled = false;
+        animator.gameObject.GetComponentInParent<PlayerMovement>().CanControlPlayer = false;
         PlayerHealth.Instance.CurrentHealth -= facePlantDamage;
         HUD.Instance.UpdateHUD();
     }

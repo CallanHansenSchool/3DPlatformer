@@ -38,7 +38,7 @@ public class Door : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (GameManager.Instance.CurrentSentence.Length >= GameManager.Instance.WantedWord.Length)
+        if (LetterManager.Instance.CurrentSentence.Length >= LetterManager.Instance.WantedWord.Length)
         {         
             if (other.gameObject.CompareTag(GameManager.PLAYER_TAG))
             {

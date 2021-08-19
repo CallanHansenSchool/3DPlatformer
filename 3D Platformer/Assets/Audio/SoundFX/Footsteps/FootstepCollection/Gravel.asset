@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b615eb6aa146acf4688193d6aba3eeb4, type: 3}
+  m_Name: Gravel
+  m_EditorClassIdentifier: 
+  footstepSounds:
+  - {fileID: 8300000, guid: bea317e8f6bded04b9a311a0f016e718, type: 3}
+  - {fileID: 8300000, guid: 99c4eaf1fe33d0a418224d0a427cf467, type: 3}
+  - {fileID: 8300000, guid: d806e406243602149ad970c25099532f, type: 3}
+  - {fileID: 8300000, guid: c534dcedf74500a4897f26c83746e8b6, type: 3}
+  - {fileID: 8300000, guid: 6482f50c3717c3f4db1e0909df626f13, type: 3}
+  - {fileID: 8300000, guid: 1bd4a69a152cb4541b8a26c3d5f2c3d4, type: 3}
+  - {fileID: 8300000, guid: 6482f50c3717c3f4db1e0909df626f13, type: 3}
+  - {fileID: 8300000, guid: c534dcedf74500a4897f26c83746e8b6, type: 3}
+  - {fileID: 8300000, guid: d806e406243602149ad970c25099532f, type: 3}
+  - {fileID: 8300000, guid: 99c4eaf1fe33d0a418224d0a427cf467, type: 3}
+  jumpSound: {fileID: 0}
+  landSound: {fileID: 8300000, guid: 0aa05ca3cd950b74ab700d0d14d67253, type: 3}
+  FootstepVolume: 0.1
+  LandVolume: 0.75
+  JumpVolume: 0.5

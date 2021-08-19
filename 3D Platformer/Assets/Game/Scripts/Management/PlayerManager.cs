@@ -23,9 +23,12 @@ public class PlayerManager : MonoBehaviour
     public PlayerLadderClimbing PlayerLadderClimb = null;
     public PlayerMelee PlayerMelee = null;
 
+    public bool Stunned = false;
+
     void Awake()
     {
         Anim = GetComponentInChildren<Animator>();
+
         #region Singleton
         if (Instance == null)
         {
@@ -67,7 +70,7 @@ public class PlayerManager : MonoBehaviour
                     break;
 
                 case "Fallpit":
-                    Anim.SetTrigger(PlayerAnimationConstants.DIE); // Add new Fallpit death animation later
+                    Anim.SetTrigger(PlayerAnimationConstants.DIE);
                     break;
             }     
 
@@ -111,6 +114,9 @@ public class PlayerManager : MonoBehaviour
         // Debug.Log("Respawned player to position " + startPos);
         PlayerHealth.Instance.ResetHealth();
         PlayerMovement.enabled = true;
+        PlayerMelee.enabled = true;
+        PlayerLadderClimb.enabled = true;
+        PlayerSlopeSlide.enabled = true;
         Dead = false;
         Anim.SetTrigger(PlayerAnimationConstants.FINISH_DEATH);
         Instance.transform.position = startPos;

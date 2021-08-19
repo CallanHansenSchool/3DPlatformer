@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b615eb6aa146acf4688193d6aba3eeb4, type: 3}
+  m_Name: Sand
+  m_EditorClassIdentifier: 
+  footstepSounds:
+  - {fileID: 8300000, guid: c37a4095ca70f734a9815a14c1810990, type: 3}
+  - {fileID: 8300000, guid: 3015397193d8e9646959bf3eeeb47554, type: 3}
+  - {fileID: 8300000, guid: 4737547f9ff0f1b4883e8f15dab3997e, type: 3}
+  - {fileID: 8300000, guid: e6feeaaace60d264b94fdab55f4b8261, type: 3}
+  - {fileID: 8300000, guid: e3385fbeb187d4d4194d71d4ebbb10ed, type: 3}
+  - {fileID: 8300000, guid: f5b1fc60e9434d841aa995c6026b1a1a, type: 3}
+  - {fileID: 8300000, guid: e3385fbeb187d4d4194d71d4ebbb10ed, type: 3}
+  - {fileID: 8300000, guid: e6feeaaace60d264b94fdab55f4b8261, type: 3}
+  - {fileID: 8300000, guid: 4737547f9ff0f1b4883e8f15dab3997e, type: 3}
+  - {fileID: 8300000, guid: 3015397193d8e9646959bf3eeeb47554, type: 3}
+  jumpSound: {fileID: 0}
+  landSound: {fileID: 8300000, guid: 0aa05ca3cd950b74ab700d0d14d67253, type: 3}
+  FootstepVolume: 0.1
+  LandVolume: 0.75
+  JumpVolume: 0.5

@@ -33,6 +33,7 @@ public class PlayerMelee : MonoBehaviour
     private bool canPerformHeavyAttack = true;
 
     public bool Blocking = false;
+    public bool CanBlock = true;
 
     private bool performedHeavyAttack = false;
 
@@ -121,24 +122,30 @@ public class PlayerMelee : MonoBehaviour
         #endregion
 
         #region Blocking
-        if (Input.GetKeyDown(BLOCK_KEY))
+        if(CanBlock)
         {
-            Blocking = true;
-        }
-
-        if(Input.GetKeyUp(BLOCK_KEY))
-        {
-            if(Blocking)
+            if (Input.GetKeyDown(BLOCK_KEY))
             {
-                Blocking = false;
-                PlayerManager.Instance.PlayerMovement.enabled = true;
-            }
+                if(PlayerManager.Instance.PlayerMovement.CanControlPlayer)
+                {
+                    if (PlayerManager.Instance.PlayerMovement.Grounded())
+                    {
+                        Blocking = true;
+                    }
+                }                         
+            }       
         }
 
-        if(Blocking)
+        if (Input.GetKeyUp(BLOCK_KEY))
+        {
+            Blocking = false;
+            PlayerManager.Instance.PlayerMovement.enabled = true;
+        }
+
+        if (Blocking)
         {
             PlayerManager.Instance.PlayerMovement.enabled = false;
-        }
+        } 
 
         PlayerManager.Instance.Anim.SetBool(PlayerAnimationConstants.BLOCKING, Blocking);
         #endregion
@@ -179,16 +186,19 @@ public class PlayerMelee : MonoBehaviour
                         {
                             if (PlayerManager.Instance.PlayerMovement.Grounded())
                             {
-                                if (attackIndex == NUM_OF_ATTACK_ANIMATIONS)
+                                if (PlayerManager.Instance.PlayerMovement.CanControlPlayer)
                                 {
-                                    attackIndex = 0;
-                                }
+                                    if (attackIndex == NUM_OF_ATTACK_ANIMATIONS)
+                                    {
+                                        attackIndex = 0;
+                                    }
 
-                                Blocking = false;
-                                attackIndex++;
-                                PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.ATTACK + attackIndex.ToString());
-                                timeSinceLastHit = 0;
-                                attackSpeed = startAttackSpeed;
+                                    Blocking = false;
+                                    attackIndex++;
+                                    PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.ATTACK + attackIndex.ToString());
+                                    timeSinceLastHit = 0;
+                                    attackSpeed = startAttackSpeed;
+                                }
                             }
                         }
                     }
@@ -199,11 +209,32 @@ public class PlayerMelee : MonoBehaviour
 
     void HeavyAttack()
     {
-        Blocking = false;
-        PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.STRONG_ATTACK);
-        StartCoroutine(ShowAttackBox(heavyMeleeAttackBox));
-        timeHeldForHeavyAttack = 0;
-        performedHeavyAttack = true;
+        if (!PlayerManager.Instance.Stunned)
+        {
+            if (!PauseMenu.Instance.Paused)
+            {
+                if (!DialogueManager.Instance.InDialogue)
+                {
+                    if (!PlayerManager.Instance.PlayerLadderClimb.CanClimb)
+                    {
+                        if (!attacking)
+                        {
+                            if (PlayerManager.Instance.PlayerMovement.Grounded())
+                            {
+                                if (PlayerManager.Instance.PlayerMovement.CanControlPlayer)
+                                {
+                                    Blocking = false;
+                                    PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.STRONG_ATTACK);
+                                    StartCoroutine(ShowAttackBox(heavyMeleeAttackBox));
+                                    timeHeldForHeavyAttack = 0;
+                                    performedHeavyAttack = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void DisableAllAttackBoxes()
@@ -211,5 +242,34 @@ public class PlayerMelee : MonoBehaviour
         lightMeleeAttackBox.SetActive(false);
         heavyMeleeAttackBox.SetActive(false);
         bodySlamMeleeAttackBox.SetActive(false);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("EnemyLightAttack"))
+        {         
+            if (!PlayerManager.Instance.PlayerMelee.Blocking)
+            {
+                PlayerHealth.Instance.TakeDamage(other.GetComponentInParent<EnemyManager>().LightAttackStrength, true);
+            }
+            else
+            {
+                PlayerHealth.Instance.TakeDamage(other.GetComponentInParent<EnemyManager>().LightAttackStrength * 0.5f, true);
+                PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.BLOCK_HIT);
+            }
+        }
+
+        if (other.gameObject.CompareTag("EnemyHeavyAttack"))
+        {
+            if (!PlayerManager.Instance.PlayerMelee.Blocking)
+            {
+                PlayerHealth.Instance.TakeDamage(other.GetComponentInParent<EnemyManager>().HeavyAttackStrength, false);
+            }
+            else
+            {
+                PlayerHealth.Instance.TakeDamage(other.GetComponentInParent<EnemyManager>().HeavyAttackStrength * 0.5f, false);
+                PlayerManager.Instance.Anim.SetTrigger(PlayerAnimationConstants.BLOCK_HIT);
+            }
+        }
     }
 }
